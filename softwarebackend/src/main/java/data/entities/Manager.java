@@ -1,8 +1,7 @@
 package data.entities;
 
-public class Usuario {
+public class Manager {
     String mail;
     String password;
-
 
 }
