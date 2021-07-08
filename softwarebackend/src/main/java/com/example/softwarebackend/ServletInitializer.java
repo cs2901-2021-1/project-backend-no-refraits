@@ -7,9 +7,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan;
 
 
-@SpringBootApplication
-@ComponentScan({"controller", "config", "service"})
-@EntityScan("data.entities")
 public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
