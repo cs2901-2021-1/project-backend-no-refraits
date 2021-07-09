@@ -17,13 +17,18 @@ public class Usuario implements Serializable {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name="nombre", nullable = false)
+    private String nombre;
+
     @Column(name = "googleid", nullable = false)
     private String googleid;
+
+    @Column(name="direccion", nullable = false)
+    private String direccion;
 
     @ManyToOne
     @JoinColumn (name = "rol_id", nullable = false)
     private Rol rol;
-
 
     public Usuario() {
     }
@@ -33,6 +38,21 @@ public class Usuario implements Serializable {
         this.googleid = googleid;
     }
 
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
     public Rol getRol() {
         return rol;
     }

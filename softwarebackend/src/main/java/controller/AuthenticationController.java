@@ -40,10 +40,11 @@ public class AuthenticationController {
 
         System.out.println(user.getEmail());
         System.out.println(user.getGoogleid());
+        System.out.println();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
         final String token = jwtTokenUtil.generateToken(user);
         System.out.println(token);
-        return new ApiResponse<>(200, "success", new AuthToken(token, user.getEmail()));
+        return new ApiResponse<>(200, "success", new AuthToken(token, user.getEmail(), user.getDireccion()));
     }
 
     @RequestMapping(value = "/update-password", method = RequestMethod.GET)
