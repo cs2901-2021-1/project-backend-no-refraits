@@ -1,7 +1,0 @@
-organization=cs2901-2021-1
-projectKey=cs2901-2021-1_project-backend-no-refraits
-serverUrl=https://sonarcloud.io
-serverVersion=8.0.0.21709
-dashboardUrl=https://sonarcloud.io/dashboard?id=cs2901-2021-1_project-backend-no-refraits
-ceTaskId=AXqLhuyHnGObQy0R94u3
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AXqLhuyHnGObQy0R94u3
