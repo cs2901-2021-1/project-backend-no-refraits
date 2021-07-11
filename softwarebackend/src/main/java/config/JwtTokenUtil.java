@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -19,6 +20,8 @@ import static config.Constants.SIGNING_KEY;
 @Component
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    private UserDetailsService userDetailsService;
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -65,6 +68,11 @@ public class JwtTokenUtil implements Serializable {
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS*1000))
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .compact();
+    }
+
+    public Boolean tokenValidation(String token, String username){
+        var userDetails = userDetailsService.loadUserByUsername(username);
+        return validateToken(token, userDetails);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

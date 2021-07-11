@@ -33,9 +33,24 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
+
     public Usuario( String email, String googleid) {
         this.email = email;
         this.googleid = googleid;
+    }
+
+    public Usuario(String email, String nombre, String googleid) {
+        this.email = email;
+        this.nombre = nombre;
+        this.googleid = googleid;
+    }
+
+    public Usuario(String email, String nombre, String googleid, String direccion, Rol rol) {
+        this.email = email;
+        this.nombre = nombre;
+        this.googleid = googleid;
+        this.direccion = direccion;
+        this.rol = rol;
     }
 
     public String getDireccion() {

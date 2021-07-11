@@ -59,7 +59,6 @@ public class AuthenticationUserService implements UserDetailsService{
     }
 
 
-
     public Usuario updatePassword(Long codigo) {
         Usuario user = findById(codigo);
         if(user != null) {

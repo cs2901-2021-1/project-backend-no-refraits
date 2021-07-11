@@ -4,7 +4,6 @@ public class AuthToken {
 
     private String token;
     private String username;
-
     private String direccion;
 
     public AuthToken(){

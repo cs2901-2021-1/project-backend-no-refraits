@@ -32,9 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = req.getHeader(HEADER_STRING);
         String username = null;
         String authToken = null;
-        if (header != null && header.startsWith(TOKEN_PREFIX)) {
+        if (header != null) {
             authToken = header.replace(TOKEN_PREFIX,"");
             try {
+                System.out.println(jwtTokenUtil.getExpirationDateFromToken(authToken));
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
                 logger.error("an error occured during getting username from token", e);
@@ -48,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            var userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
