@@ -51,8 +51,7 @@ public class JwtTokenUtil implements Serializable {
     public String generateToken(Usuario user) {
         String tokenizeString = "";
         String userRol = user.getRol().getName();
-        if(userRol.equals("WEB")) tokenizeString = "";
-        else tokenizeString = user.getEmail();
+        tokenizeString = user.getEmail();
         return doGenerateToken(tokenizeString, userRol);
     }
 

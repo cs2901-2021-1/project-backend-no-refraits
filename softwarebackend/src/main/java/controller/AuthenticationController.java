@@ -42,13 +42,11 @@ public class AuthenticationController {
             return new ApiResponse<>(404, "No existe este usuario", new AuthToken("","",""));
         }
         else{
-            if(user.getGoogleid().equals("") && user.getNombre().equals("")){
+            if(user.getNombre().equals("")){
                 var newUser = new Usuario(loginUser.getEmail(), loginUser.getNombre(),loginUser.getPassword(), user.getDireccion(),user.getRol());
                 usuarioService.update(newUser, user.getId());
                 var userTemp = usuarioService.findOne(user.getId());
                 var rolUserTemp = userTemp.getRol();
-                System.out.println("LINEA 56");
-                System.out.println(rolUserTemp.getName());
                 authenticationUserService.updatePassword(user.getId());
             }
         }

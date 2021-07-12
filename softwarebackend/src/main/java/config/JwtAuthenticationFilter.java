@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 System.out.println(jwtTokenUtil.getExpirationDateFromToken(authToken));
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
+                System.out.println(username);
             } catch (IllegalArgumentException e) {
                 logger.error("an error occured during getting username from token", e);
             } catch (ExpiredJwtException e) {

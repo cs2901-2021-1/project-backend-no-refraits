@@ -38,6 +38,7 @@ public class GenerateController {
 
     @RequestMapping(value = "/generateusers", method = RequestMethod.GET)
     public String generateusers() {
+        createUser("renato.rodriguez.l@utec.edu.pe", DIRADMINUSER, "CS");
         return "OK";
     }
     public String createRoles(){
@@ -48,12 +49,14 @@ public class GenerateController {
         return "OK";
     }
 
-
-    public void createUser(String gmail,String rol) {
+    public void createUser(String gmail,String rol, String direccion) {
         var user = new Usuario();
         var roleAdmin = rolService.findOneByName(rol);
         user.setRol(roleAdmin);
-        user.setEmail("esteban.principe@utec.edu.pe");
+        user.setDireccion(direccion);
+        user.setEmail(gmail);
+        user.setGoogleid("");
+        user.setNombre("");
         userService.save(user);
     }
 }
