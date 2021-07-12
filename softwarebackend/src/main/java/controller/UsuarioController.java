@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -32,7 +31,12 @@ public class UsuarioController {
     //POST
     @PostMapping("/create/{rol}/{direccion}")
     @CrossOrigin(origins = clientUrl)
-    public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion,@RequestBody Usuario usuario) {
+    public Usuario newUsuario(
+            @PathVariable String rol,
+            @PathVariable String direccion,
+            @RequestBody Usuario usuario) {
+
+        System.out.println(usuario);
         System.out.println(rol);
         System.out.println(rol);
         System.out.println(rol);
@@ -54,7 +58,7 @@ public class UsuarioController {
     //GET by ID
     @GetMapping("/{id}")
     @CrossOrigin(origins = clientUrl)
-    public Usuario one(@PathVariable Long id, @RequestBody AuthToken authToken ) { return service.findOne(id); }
+    public Usuario one(@PathVariable Long id, @RequestBody AuthData authData) { return service.findOne(id); }
 
 
     //UPDATE by ID
@@ -65,6 +69,6 @@ public class UsuarioController {
     //DELETE by ID
     @DeleteMapping("/{id}")
     @CrossOrigin(origins = clientUrl)
-    void deleteTarea(@PathVariable Long id, @RequestBody AuthToken authToken ) { service.deleteById(id); }
+    void deleteTarea(@PathVariable Long id, @RequestBody AuthData authData) { service.deleteById(id); }
 
 }

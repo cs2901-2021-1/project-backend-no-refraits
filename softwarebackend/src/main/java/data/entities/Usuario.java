@@ -100,4 +100,14 @@ public class Usuario implements Serializable {
         this.googleid = passwd;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", rol=" + rol +
+                '}';
+    }
 }

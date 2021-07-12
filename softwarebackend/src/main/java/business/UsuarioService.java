@@ -88,10 +88,6 @@ public class UsuarioService {
         repository.delete(findOne(id));
     }
 
-    public Usuario buscarUsuario(String email, String googleid){
-        return repository.findUsuarioByEmailAndGoogleid(email, googleid);
-    }
-
     public Usuario findOneByEmail(String email){
         return repository.findUsuarioByEmail(email);
     }

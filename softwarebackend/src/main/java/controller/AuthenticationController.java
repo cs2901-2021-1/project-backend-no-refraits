@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,6 +21,7 @@ public class AuthenticationController {
 
     @Autowired
     private RolService rolService;
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -35,25 +33,28 @@ public class AuthenticationController {
     private AuthenticationUserService authenticationUserService;
 
     @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-    public ApiResponse<AuthToken> register(@RequestBody Login loginUser) throws AuthenticationException {
+    public ApiResponse<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {
         final var user = usuarioService.findOneByEmail(loginUser.getEmail());
         if (user == null)
         {
-            return new ApiResponse<>(404, "No existe este usuario", new AuthToken("","",""));
+            return new ApiResponse<>(404, "No existe este usuario", null);
         }
-        else{
-            if(user.getNombre().equals("")){
-                var newUser = new Usuario(loginUser.getEmail(), loginUser.getNombre(),loginUser.getPassword(), user.getDireccion(),user.getRol());
-                usuarioService.update(newUser, user.getId());
-                var userTemp = usuarioService.findOne(user.getId());
-                var rolUserTemp = userTemp.getRol();
-                authenticationUserService.updatePassword(user.getId());
-            }
+        if(user.getNombre().equals("")){
+            var newUser = new Usuario(loginUser.getEmail(), loginUser.getNombre(),loginUser.getPassword(), user.getDireccion(),user.getRol());
+            usuarioService.update(newUser, user.getId());
+            authenticationUserService.updatePassword(user.getId());
         }
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
         final String token = jwtTokenUtil.generateToken(user);
         System.out.println(token);
-        return new ApiResponse<>(200, "success", new AuthToken(token, user.getEmail(), user.getDireccion()));
+        System.out.println(user.getRol().getName());
+
+        var test = jwtTokenUtil.getUsernameFromToken(token);
+        System.out.println(test);
+        System.out.println(usuarioService.findOneByEmail(test));
+        return new ApiResponse<>(200, "success",
+                new AuthData(token, user.getEmail(), user.getDireccion()));
     }
 
     /*

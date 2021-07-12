@@ -1,22 +1,23 @@
 package data.entities;
 
-public class AuthToken {
+public class AuthData {
 
     private String token;
     private String username;
     private String direccion;
+    private String rol;
 
-    public AuthToken(){
+    public AuthData() {
 
     }
 
-    public AuthToken(String token, String username, String direccion){
+    public AuthData(String token, String username, String direccion){
         this.token = token;
         this.username = username;
         this.direccion = direccion;
     }
 
-    public AuthToken(String token){
+    public AuthData(String token){
         this.token = token;
     }
 
@@ -36,6 +37,13 @@ public class AuthToken {
         this.direccion = direccion;
     }
 
+    public String getRol() {
+        return this.rol;
+    }
+
+    public void setRol(String roleName) {
+        this.rol = roleName;
+    }
 
     public String getUsername() {
         return username;
