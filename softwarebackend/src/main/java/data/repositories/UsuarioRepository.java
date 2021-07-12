@@ -7,9 +7,12 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Usuario findUsuarioByEmailAndGoogleid(String email, String googleid);
-    Usuario findUsuarioByEmail(String email);
+    Usuario findUsuarioByEmail (String email);
+    Usuario findUsuarioByEmailAndNombreNotNull(String email);
+
+    Usuario findUsuarioByNombre(String nombre);
 
     @Query(value = "SELECT rol_id from usuario u where u.id= ?1", nativeQuery = true)
-    int getRolidbyID(Long id);
+    long getRolidbyID(Long id);
 
 }

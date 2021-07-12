@@ -38,7 +38,7 @@ public class GenerateController {
 
     @RequestMapping(value = "/generateusers", method = RequestMethod.GET)
     public String generateusers() {
-        createUser("renato.rodriguez.l@utec.edu.pe", DIRADMINUSER, "CS");
+        createUser("renato.rodriguez.l@utec.edu.pe", SYSADMINUSER, "CS");
         return "OK";
     }
     public String createRoles(){

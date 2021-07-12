@@ -23,7 +23,7 @@ public class UsuarioService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    private String roleName(int role){
+    private String roleName(long role){
         var retorno = "";
         if (role == 1){
             retorno = "Administrador de sistema";
@@ -38,8 +38,10 @@ public class UsuarioService {
         return retorno;
     }
 
+    public String getPrettyNameRolebyId(long roleId){
+        return roleName(roleId);
+    }
     public List<UsuarioDisplay> getAllUsertoDisplay(String direccion){
-        System.out.println(direccion);
         List<UsuarioDisplay> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
@@ -59,6 +61,14 @@ public class UsuarioService {
             items.add(item);
         }
         return items;
+    }
+
+    public Boolean isSysAdmin(Usuario usuario){
+        return usuario.getRol().getId()==1;
+    }
+
+    public  Boolean isDirAdmin(Usuario usuario){
+        return usuario.getRol().getId()==2;
     }
 
     public Usuario findOne(long id){
@@ -90,6 +100,14 @@ public class UsuarioService {
 
     public Usuario findOneByEmail(String email){
         return repository.findUsuarioByEmail(email);
+    }
+
+    public Usuario findUsuarioByEmailAndNombreNotNull(String email){
+        return repository.findUsuarioByEmailAndNombreNotNull(email);
+    }
+
+    public Usuario findOneByNombre(String nombre){
+        return repository.findUsuarioByNombre(nombre);
     }
 
     public Usuario save(Usuario newUsuario) {

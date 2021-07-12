@@ -31,28 +31,37 @@ public class UsuarioController {
     //POST
     @PostMapping("/create/{rol}/{direccion}")
     @CrossOrigin(origins = clientUrl)
-    public Usuario newUsuario(
-            @PathVariable String rol,
-            @PathVariable String direccion,
-            @RequestBody Usuario usuario) {
+    public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion, @RequestBody Usuario nuevousuario, @RequestHeader("Authorization") String token) {
+        System.out.println("dqwdwqdqdwq");
+        var username = jwtTokenUtil.getUsernameFromToken(token);
+        var user = service.findUsuarioByEmailAndNombreNotNull(username);
+        if(service.isSysAdmin(user)){
+            System.out.println("dddddddddddddddddddddddddddd");
+            var newrol = rolService.findOneByName(rol);
+            nuevousuario.setRol(newrol);
+            nuevousuario.setGoogleid("");
+            nuevousuario.setNombre("");
+            nuevousuario.setDireccion(direccion);
+            return authenticationUserService.save(nuevousuario);
+        }
+        System.out.println("aaaaaaaaaaaaaaaaaaa");
 
-        System.out.println(usuario);
-        System.out.println(rol);
-        System.out.println(rol);
-        System.out.println(rol);
-        usuario.setGoogleid("");
-        var newrol = rolService.findOneByName(rol);
-        usuario.setRol(newrol);
-        usuario.setDireccion(direccion);
-        return authenticationUserService.save(usuario);
+        var newrol = rolService.findOneByName("DIR_USER");
+        nuevousuario.setRol(newrol);
+        nuevousuario.setGoogleid("");
+        nuevousuario.setNombre("");
+        System.out.println(user.getDireccion());
+        nuevousuario.setDireccion(user.getDireccion());
+        return authenticationUserService.save(nuevousuario);
     }
 
     //GET ALL
-    @GetMapping("/getall/{direccion}/{email}")
+    @GetMapping("/getall")
     @CrossOrigin(origins = clientUrl)
-    public List<UsuarioDisplay> readAll(@PathVariable String direccion,@PathVariable String email) {
-        System.out.println(email);
-        return service.getAllUsertoDisplay(direccion);
+    public List<UsuarioDisplay> readAll(@RequestHeader("Authorization") String token) {
+        var username = jwtTokenUtil.getUsernameFromToken(token);
+        var user = service.findOneByEmail(username);
+        return service.getAllUsertoDisplay(user.getDireccion());
     }
 
     //GET by ID
@@ -69,6 +78,6 @@ public class UsuarioController {
     //DELETE by ID
     @DeleteMapping("/{id}")
     @CrossOrigin(origins = clientUrl)
-    void deleteTarea(@PathVariable Long id, @RequestBody AuthData authData) { service.deleteById(id); }
+    void deleteTarea(@PathVariable Long id) { service.deleteById(id); }
 
 }

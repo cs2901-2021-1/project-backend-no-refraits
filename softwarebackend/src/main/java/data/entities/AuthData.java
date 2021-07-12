@@ -11,10 +11,10 @@ public class AuthData {
 
     }
 
-    public AuthData(String token, String username, String direccion){
+    public AuthData(String token, String username, String rol){
         this.token = token;
         this.username = username;
-        this.direccion = direccion;
+        this.rol = rol;
     }
 
     public AuthData(String token){
