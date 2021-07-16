@@ -38,16 +38,34 @@ public class UsuarioService {
         return retorno;
     }
 
+    public List<UsuarioDisplay> getAllUserToDisplay(String gmail){
+        List<UsuarioDisplay> items = new ArrayList<>();
+        var itemsUsuario = findAll();
+        for (Usuario item : itemsUsuario){
+            if (item.getEmail() != null){
+                if(!item.getEmail().equals(gmail)){
+                    var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
+                    items.add(user);
+                }
+            }
+        }
+        return items;
+    }
+
+
     public String getPrettyNameRolebyId(long roleId){
         return roleName(roleId);
     }
-    public List<UsuarioDisplay> getAllUsertoDisplay(String direccion){
+    public List<UsuarioDisplay> getAllUsertoDisplay(String direccion,String gmail){
         List<UsuarioDisplay> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
             if (item.getEmail() != null && item.getDireccion().equals(direccion)){
-                var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
-                items.add(user);
+                if(!item.getEmail().equals(gmail)){
+                    var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
+                    items.add(user);
+                }
+
             }
         }
         return items;

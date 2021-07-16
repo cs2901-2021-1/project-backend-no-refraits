@@ -38,7 +38,7 @@ public class GenerateController {
 
     @RequestMapping(value = "/generateusers", method = RequestMethod.GET)
     public String generateusers() {
-        createUser("renato.rodriguez.l@utec.edu.pe", SYSADMINUSER, "CS");
+        createSysAdminUser("renato.rodriguez.l@utec.edu.pe", SYSADMINUSER);
         return "OK";
     }
     public String createRoles(){
@@ -47,6 +47,18 @@ public class GenerateController {
         rolService.create(new Rol(DGAUSER));
         rolService.create(new Rol(DIRUSER));
         return "OK";
+    }
+
+    public void createSysAdminUser(String gmail, String rol){
+        var user = new Usuario();
+        var roleAdmin = rolService.findOneByName(rol);
+        user.setRol(roleAdmin);
+        user.setDireccion("");
+        user.setEmail(gmail);
+        user.setGoogleid("");
+        user.setNombre("");
+        userService.save(user);
+
     }
 
     public void createUser(String gmail,String rol, String direccion) {

@@ -32,11 +32,9 @@ public class UsuarioController {
     @PostMapping("/create/{rol}/{direccion}")
     @CrossOrigin(origins = clientUrl)
     public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion, @RequestBody Usuario nuevousuario, @RequestHeader("Authorization") String token) {
-        System.out.println("dqwdwqdqdwq");
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = service.findUsuarioByEmailAndNombreNotNull(username);
         if(service.isSysAdmin(user)){
-            System.out.println("dddddddddddddddddddddddddddd");
             var newrol = rolService.findOneByName(rol);
             nuevousuario.setRol(newrol);
             nuevousuario.setGoogleid("");
@@ -44,7 +42,6 @@ public class UsuarioController {
             nuevousuario.setDireccion(direccion);
             return authenticationUserService.save(nuevousuario);
         }
-        System.out.println("aaaaaaaaaaaaaaaaaaa");
 
         var newrol = rolService.findOneByName("DIR_USER");
         nuevousuario.setRol(newrol);
@@ -60,8 +57,15 @@ public class UsuarioController {
     @CrossOrigin(origins = clientUrl)
     public List<UsuarioDisplay> readAll(@RequestHeader("Authorization") String token) {
         var username = jwtTokenUtil.getUsernameFromToken(token);
-        var user = service.findOneByEmail(username);
-        return service.getAllUsertoDisplay(user.getDireccion());
+        var user = service.findUsuarioByEmailAndNombreNotNull(username);
+        List<UsuarioDisplay> retorno;
+        if(service.isSysAdmin(user)) {
+            retorno = service.getAllUserToDisplay(username);
+        }
+        else {
+            retorno = service.getAllUsertoDisplay(user.getDireccion(), username);
+        }
+        return retorno;
     }
 
     //GET by ID
@@ -70,14 +74,11 @@ public class UsuarioController {
     public Usuario one(@PathVariable Long id, @RequestBody AuthData authData) { return service.findOne(id); }
 
 
-    //UPDATE by ID
-    @PutMapping("/{id}")
-    @CrossOrigin(origins = clientUrl)
-    public Usuario replaceTarea(@RequestBody Usuario newUsuario, @PathVariable Long id) { return service.update(newUsuario, id); }
-
     //DELETE by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @CrossOrigin(origins = clientUrl)
-    void deleteTarea(@PathVariable Long id) { service.deleteById(id); }
+    void deleteUser(@PathVariable Long id) {
+        service.deleteById(id);
+    }
 
 }

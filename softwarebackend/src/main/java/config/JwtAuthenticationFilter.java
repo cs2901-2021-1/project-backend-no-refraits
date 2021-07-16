@@ -5,7 +5,6 @@ import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static config.Constants.HEADER_STRING;
-import static config.Constants.TOKEN_PREFIX;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -33,21 +31,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
         String authToken = null;
         if (header != null) {
-            authToken = header.replace(TOKEN_PREFIX,"");
+            authToken = header;
             try {
-                System.out.println(jwtTokenUtil.getExpirationDateFromToken(authToken));
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
-                System.out.println(username);
             } catch (IllegalArgumentException e) {
-                logger.error("an error occured during getting username from token", e);
+                logger.error("Error al conseguir el username con el token", e);
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                logger.warn("Token expirado", e);
             } catch(SignatureException e){
-                logger.error("Authentication Failed. Username or Password not valid.");
+                logger.error("Error en la autenticacion");
             }
         } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
+            logger.warn("error con el token");
         }
+        // ENCONTRAR LA FORMA DE QUE EN VEZ DE ARROJAR CODE 500 GENERE UN  NUEVO TOKEN
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             var userDetails = userDetailsService.loadUserByUsername(username);
@@ -55,10 +53,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                logger.info("authenticated user " + username + ", setting security context");
+                logger.info("usuario autenticado " + username);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }else{
-                logger.warn("invalid token "+username);
+                logger.warn("token invalido "+username);
             }
         }
 
