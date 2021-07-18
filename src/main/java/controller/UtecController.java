@@ -19,7 +19,7 @@ import java.util.List;
 
 public class UtecController {
 
-    final static String clientUrl = "*";
+    static final String CLIENTURL = "*";
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
@@ -30,9 +30,9 @@ public class UtecController {
     @Autowired
     @Qualifier("ds2")
     DataSource ds2;
-
+/*
     @GetMapping("/getdirecs/{direccion}")
-    @CrossOrigin(origins = clientUrl)
+    @CrossOrigin(origins = CLIENTURL)
     public List<Course> getDirecs( @RequestHeader("Authorization") String token, @PathVariable String direccion) throws SQLException {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findUsuarioByEmailAndNombreNotNull(username);
@@ -106,7 +106,7 @@ public class UtecController {
         }
 
     }
-
+*/
 
 }
 
