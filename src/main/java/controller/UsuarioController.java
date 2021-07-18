@@ -74,7 +74,10 @@ public class UsuarioController {
     //GET by ID
     @GetMapping("/{id}")
     @CrossOrigin(origins = CLIENT_URL)
-    public Usuario one(@PathVariable Long id, @RequestBody AuthData authData) { return service.findOne(id); }
+    public Usuario one(@PathVariable Long id, @RequestBody AuthData authData) {
+
+        return service.findOne(id);
+    }
 
 
     //DELETE by ID

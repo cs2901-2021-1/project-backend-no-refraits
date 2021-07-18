@@ -1,11 +1,8 @@
 package data.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
 
 @Entity
 @Table(name = "usuario")

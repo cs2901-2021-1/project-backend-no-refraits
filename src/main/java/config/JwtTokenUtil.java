@@ -10,12 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.function.Function;
-
-import static config.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
-import static config.Constants.SIGNING_KEY;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -50,20 +47,19 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(Usuario user) {
-        String tokenizeString = "";
         String userRol = user.getRol().getName();
-        tokenizeString = user.getEmail();
+        String tokenizeString = user.getEmail();
         return doGenerateToken(tokenizeString, userRol);
     }
 
     private String doGenerateToken(String subject, String roleName) {
 
         Claims claims = Jwts.claims().setSubject(subject);
-        claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_"+roleName)));
+        claims.put("scopes", Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + roleName)));
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuer("http://devglan.com")
+                .setIssuer("https://devglan.com")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS*1000))
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)

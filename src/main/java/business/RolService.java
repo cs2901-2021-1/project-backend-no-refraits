@@ -29,9 +29,6 @@ public class RolService {
         return repository.findRolByName(name);
     }
 
-    public Rol findOne(long id){
-        return repository.findById(id).get();
-    }
 
     public Rol create(Rol item) {
         return repository.save(item);
@@ -49,7 +46,4 @@ public class RolService {
         }
     }
 
-    public void delete(Long id){
-        repository.delete(findOne(id));
-    }
 }

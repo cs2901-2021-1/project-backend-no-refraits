@@ -1,6 +1,5 @@
 package business;
 
-import config.JwtTokenUtil;
 import data.entities.Usuario;
 import data.entities.UsuarioDisplay;
 import data.repositories.UsuarioRepository;
@@ -18,12 +17,9 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
 
-    private final JwtTokenUtil jwtTokenUtil;
-
     @Autowired
-    public UsuarioService(UsuarioRepository repository, JwtTokenUtil jwtTokenUtil) {
+    public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;
-        this.jwtTokenUtil = jwtTokenUtil;
     }
 
 
