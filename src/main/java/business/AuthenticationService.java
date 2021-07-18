@@ -15,11 +15,15 @@ import java.util.*;
 
 @Service(value = "AuthenticationService")
 public class AuthenticationService implements UserDetailsService{
-    @Autowired
-    private UsuarioRepository userDao;
+    private final UsuarioRepository userDao;
+
+    private final BCryptPasswordEncoder bcryptEncoder;
 
     @Autowired
-    private BCryptPasswordEncoder bcryptEncoder;
+    public AuthenticationService(UsuarioRepository userDao, BCryptPasswordEncoder bcryptEncoder) {
+        this.userDao = userDao;
+        this.bcryptEncoder = bcryptEncoder;
+    }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = userDao.findUsuarioByEmail(username);

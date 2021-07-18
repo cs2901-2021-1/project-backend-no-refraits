@@ -17,17 +17,23 @@ import java.util.List;
 public class UsuarioController {
     static final String CLIENT_URL = "*";
 
-    @Autowired
-    private UsuarioService service;
+    private final UsuarioService service;
+
+    private final AuthenticationService authenticationUserService;
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final RolService rolService;
 
     @Autowired
-    private AuthenticationService authenticationUserService;
+    public UsuarioController(UsuarioService service, AuthenticationService authenticationUserService, JwtTokenUtil jwtTokenUtil, RolService rolService) {
+        this.service = service;
+        this.authenticationUserService = authenticationUserService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.rolService = rolService;
+    }
 
-    @Autowired
-    private  JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private RolService rolService;
 
     //POST
     @PostMapping("/create/{rol}/{direccion}")

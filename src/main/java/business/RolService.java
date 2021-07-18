@@ -34,9 +34,10 @@ public class RolService {
         return repository.findById(id).get();
     }
 
-    public Rol create(Rol item){
+    public Rol create(Rol item) {
         return repository.save(item);
     }
+
     public Rol update(Rol newRol, Long id) {
         Optional<Rol> findRol = repository.findById(id);
         if (findRol.isPresent()) {
