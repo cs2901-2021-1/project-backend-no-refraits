@@ -1,7 +1,6 @@
 package controller;
 import business.AuthenticationService;
 import business.RolService;
-import business.UsuarioService;
 import data.entities.Rol;
 import data.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/test")
 public class GenerateController {
-    static final String CLIENT_URL = "*";
     static final String SYSADMINUSER = "SYS_ADMIN";
     static final String DIRADMINUSER = "DIR_ADMIN";
     static final String DGAUSER = "DIR_DGA";
     static final String DIRUSER = "DIR_USER";
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final AuthenticationService userService;
+
+    private final RolService rolService;
 
     @Autowired
-    private AuthenticationService userService;
-
-    @Autowired
-    private RolService rolService;
+    public GenerateController(AuthenticationService userService, RolService rolService) {
+        this.userService = userService;
+        this.rolService = rolService;
+    }
 
     @GetMapping(value = "/generateroles")
     public String generateroles() {
@@ -47,15 +46,7 @@ public class GenerateController {
     }
 
     public void createSysAdminUser(String gmail, String rol){
-        var user = new Usuario();
-        var roleAdmin = rolService.findOneByName(rol);
-        user.setRol(roleAdmin);
-        user.setDireccion("");
-        user.setEmail(gmail);
-        user.setGoogleid("");
-        user.setNombre("");
-        userService.save(user);
-
+        createUser(gmail, rol, "");
     }
 
     public void createUser(String gmail,String rol, String direccion) {

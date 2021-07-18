@@ -18,6 +18,7 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String HEADERSTRING = "Authorization";
+
     @Autowired
     private UserDetailsService userDetailsService;
 

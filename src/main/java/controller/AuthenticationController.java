@@ -2,7 +2,6 @@ package controller;
 
 
 import business.AuthenticationService;
-import business.RolService;
 import business.UsuarioService;
 import config.JwtTokenUtil;
 import data.entities.*;
@@ -17,21 +16,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/token")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final UsuarioService usuarioService;
+
+    private final AuthenticationService authenticationUserService;
 
     @Autowired
-    private RolService rolService;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private UsuarioService usuarioService;
-
-
-    @Autowired
-    private AuthenticationService authenticationUserService;
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UsuarioService usuarioService, AuthenticationService authenticationUserService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.usuarioService = usuarioService;
+        this.authenticationUserService = authenticationUserService;
+    }
 
     @PostMapping(value = "/generate-token")
     public Response<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {

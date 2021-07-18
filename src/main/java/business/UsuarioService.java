@@ -16,11 +16,17 @@ import java.util.Optional;
 @Transactional
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository repository;
+    private final UsuarioRepository repository;
+
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    public UsuarioService(UsuarioRepository repository, JwtTokenUtil jwtTokenUtil) {
+        this.repository = repository;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
+
 
     private String roleName(long role){
         var retorno = "";

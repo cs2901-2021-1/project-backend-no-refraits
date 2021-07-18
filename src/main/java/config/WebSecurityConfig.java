@@ -28,6 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
