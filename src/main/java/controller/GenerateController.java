@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/test")
 public class GenerateController {
-    final static String clientUrl = "*";
-    final static String SYSADMINUSER = "SYS_ADMIN";
-    final static String DIRADMINUSER = "DIR_ADMIN";
-    final static String DGAUSER = "DIR_DGA";
-    final static String DIRUSER = "DIR_USER";
+    static final String clientUrl = "*";
+    static final String SYSADMINUSER = "SYS_ADMIN";
+    static final String DIRADMINUSER = "DIR_ADMIN";
+    static final String DGAUSER = "DIR_DGA";
+    static final String DIRUSER = "DIR_USER";
 
     @Autowired
     private UsuarioService usuarioService;

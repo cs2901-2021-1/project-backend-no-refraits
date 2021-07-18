@@ -26,17 +26,14 @@ public class Usuario implements Serializable {
     @JoinColumn (name = "rol_id", nullable = false)
     private Rol rol;
 
-    private String roleName;
-
     public Usuario() {
     }
 
-    public Usuario( String nombre , String email,  String direccion, Long id, String roleName) {
+    public Usuario( String nombre , String email,  String direccion, Long id) {
         this.id = id;
         this.email = email;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.roleName = roleName;
     }
 
     public Usuario(String email, String googleid) {
@@ -73,6 +70,7 @@ public class Usuario implements Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     public Rol getRol() {
         return rol;
     }

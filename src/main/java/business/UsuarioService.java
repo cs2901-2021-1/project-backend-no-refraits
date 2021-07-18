@@ -44,7 +44,7 @@ public class UsuarioService {
         for (Usuario item : itemsUsuario){
             if (item.getEmail() != null){
                 if(!item.getEmail().equals(gmail)){
-                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
+                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
                     items.add(user);
                 }
             }
@@ -62,7 +62,7 @@ public class UsuarioService {
         for (Usuario item : itemsUsuario){
             if (item.getEmail() != null && item.getDireccion().equals(direccion)){
                 if(!item.getEmail().equals(gmail)){
-                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
+                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
                     items.add(user);
                 }
             }
