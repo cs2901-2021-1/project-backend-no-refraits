@@ -5,9 +5,9 @@ public class Response<T> {
 
     private int status;
     private String message;
-    private Object result;
+    private T result;
 
-    public Response(int status, String message, Object result) {
+    public Response(int status, String message, T result) {
         this.status = status;
         this.message = message;
         this.result = result;
@@ -33,7 +33,7 @@ public class Response<T> {
         return result;
     }
 
-    public void setResult(Object result) {
+    public void setResult(T result) {
         this.result = result;
     }
 }

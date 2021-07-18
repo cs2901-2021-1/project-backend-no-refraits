@@ -97,22 +97,17 @@ public class CourseController {
         connectionProps.put("user", this.user);
         connectionProps.put("password", this.password);
 
-        Connection conn = DriverManager.getConnection(this.url, connectionProps);
-
-        System.out.println("Connected to database");
-        return conn;
+        return DriverManager.getConnection(this.url, connectionProps);
     }
 
     // temporary function
     @GetMapping(value="/results")
-    public void printResults() throws SQLException, JSONException {
+    public JSONObject printResults() throws SQLException, JSONException {
         try (Connection connection = this.getConnection()) {
             try (Statement statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery(QUERY_STR);
                 ResultSetMetaData rsmd = rs.getMetaData();
                 JSONObject obj = new JSONObject();
-
-                System.out.println(rsmd);
 
                 for (int rowNum = 0; rs.next(); ++rowNum) {
                     JSONObject item = new JSONObject();
@@ -121,10 +116,11 @@ public class CourseController {
                         String columnName = rsmd.getColumnName(i);
                         item.put(columnName, rs.getObject(columnName));
                     }
-                    System.out.println(item);
+
                     obj.put(String.valueOf(rowNum), item);
                 }
                 rs.close();
+                return obj;
             }
         }
     }

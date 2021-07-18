@@ -41,7 +41,7 @@ public class RolService {
         Optional<Rol> findRol = repository.findById(id);
         if (findRol.isPresent()) {
             Rol rol = findRol.get();
-            rol.setName(newRol.getName() == null ? newRol.getName() : newRol.getName());
+            rol.setName(newRol.getName());
             return repository.save(rol);
         } else {
             newRol.setId(id);

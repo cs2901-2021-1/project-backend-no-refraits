@@ -5,16 +5,13 @@ import business.UsuarioService;
 import data.entities.Rol;
 import data.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/test")
 public class GenerateController {
-    static final String clientUrl = "*";
+    static final String CLIENT_URL = "*";
     static final String SYSADMINUSER = "SYS_ADMIN";
     static final String DIRADMINUSER = "DIR_ADMIN";
     static final String DGAUSER = "DIR_DGA";
@@ -29,17 +26,18 @@ public class GenerateController {
     @Autowired
     private RolService rolService;
 
-    @RequestMapping(value = "/generateroles", method = RequestMethod.GET)
+    @GetMapping(value = "/generateroles")
     public String generateroles() {
         createRoles();
         return "OK";
     }
 
-    @RequestMapping(value = "/generateusers", method = RequestMethod.GET)
+    @GetMapping(value = "/generateusers")
     public String generateusers() {
         createSysAdminUser("renato.rodriguez.l@utec.edu.pe", SYSADMINUSER);
         return "OK";
     }
+
     public String createRoles(){
         rolService.create(new Rol(SYSADMINUSER));
         rolService.create(new Rol(DIRADMINUSER));

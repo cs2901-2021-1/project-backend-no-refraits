@@ -2,7 +2,6 @@ package business;
 
 
 import config.JwtTokenUtil;
-import data.entities.Rol;
 import data.entities.Usuario;
 import data.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,32 +41,28 @@ public class UsuarioService {
         List<Usuario> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
-            if (item.getEmail() != null){
-                if(!item.getEmail().equals(gmail)){
-                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
-                    items.add(user);
-                }
+            if (!item.getEmail().equals(gmail)){
+                var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
+                items.add(user);
             }
         }
         return items;
     }
 
-
-    public String getPrettyNameRolebyId(long roleId){
-        return roleName(roleId);
-    }
-    public List<Usuario> getAllUsertoDisplay(String direccion,String gmail){
+    public List<Usuario> getUsersUnderDirection(String direccion, String gmail){
         List<Usuario> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
-            if (item.getEmail() != null && item.getDireccion().equals(direccion)){
-                if(!item.getEmail().equals(gmail)){
-                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
-                    items.add(user);
-                }
+        if (item.getDireccion().equals(direccion) && !item.getEmail().equals(gmail)){
+                var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
+                items.add(user);
             }
         }
         return items;
+    }
+
+    public String getPrettyNameRolebyId(long roleId){
+        return roleName(roleId);
     }
 
     public List<Usuario> findAll(){

@@ -28,8 +28,8 @@ public class AuthenticationService implements UserDetailsService{
         }
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getGoogleid(), getAuthority(user));
     }
-    private Set getAuthority(Usuario user) {
-        Set authorities = new HashSet<>();
+    private Set<SimpleGrantedAuthority> getAuthority(Usuario user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRol().getName()));
         return authorities;
     }
