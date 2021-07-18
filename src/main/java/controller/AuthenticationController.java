@@ -36,6 +36,7 @@ public class AuthenticationController {
     public ApiResponse<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {
         System.out.println(loginUser.getEmail());
         var user = usuarioService.findOneByEmail(loginUser.getEmail());
+
         if (user == null)
         {
             return new ApiResponse<>(404, "No existe este usuario", null);
@@ -53,11 +54,6 @@ public class AuthenticationController {
                 new AuthData(token, user.getEmail(), usuarioService.getPrettyNameRolebyId(user.getRol().getId())));
     }
 
-    /*
-    @Autowired
-    private UsuarioService service;
-
-*/
     @RequestMapping(value = "/update-password", method = RequestMethod.GET)
     public String updatePasswordUser(){
         Usuario u = usuarioService.findOneByEmail("jbellido@uc.cl");

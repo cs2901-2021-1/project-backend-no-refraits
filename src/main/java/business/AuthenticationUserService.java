@@ -64,8 +64,11 @@ public class AuthenticationUserService implements UserDetailsService{
         if(user != null) {
             user.setGoogleid(bcryptEncoder.encode(user.getGoogleid()));
             userDao.save(user);
+            return user;
         }
-        return user;
+        else {
+            return null;
+        }
     }
 
     public Usuario update(Usuario userDto) {
