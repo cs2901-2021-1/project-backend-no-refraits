@@ -1,6 +1,6 @@
 package controller;
 
-import business.AuthenticationUserService;
+import business.AuthenticationService;
 import business.RolService;
 import business.UsuarioService;
 import config.JwtTokenUtil;
@@ -18,16 +18,16 @@ public class UsuarioController {
 
     private final UsuarioService service;
 
-    private final AuthenticationService authenticationUserService;
+    private final AuthenticationService authenticationService;
 
     private final JwtTokenUtil jwtTokenUtil;
 
     private final RolService rolService;
 
     @Autowired
-    public UsuarioController(UsuarioService service, AuthenticationService authenticationUserService, JwtTokenUtil jwtTokenUtil, RolService rolService) {
+    public UsuarioController(UsuarioService service, AuthenticationService authenticationService, JwtTokenUtil jwtTokenUtil, RolService rolService) {
         this.service = service;
-        this.authenticationUserService = authenticationUserService;
+        this.authenticationService = authenticationService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.rolService = rolService;
     }
@@ -46,7 +46,7 @@ public class UsuarioController {
             nuevousuario.setGoogleid("");
             nuevousuario.setNombre("");
             nuevousuario.setDireccion(direccion);
-            return authenticationUserService.save(nuevousuario);
+            return authenticationService.save(nuevousuario);
         }
 
         var newrol = rolService.findOneByName("DIR_USER");
@@ -54,23 +54,21 @@ public class UsuarioController {
         nuevousuario.setGoogleid("");
         nuevousuario.setNombre("");
         nuevousuario.setDireccion(user.getDireccion());
-        return authenticationUserService.save(nuevousuario);
+        return authenticationService.save(nuevousuario);
     }
 
     //GET ALL
     @GetMapping("/getall")
     @CrossOrigin(origins = CLIENT_URL)
-    public List<Usuario> readAll(@RequestHeader("Authorization") String token) {
+    public List<UsuarioDisplay> readAll(@RequestHeader("Authorization") String token) {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = service.findUsuarioByEmailAndNombreNotNull(username);
-        List<Usuario> retorno;
+
         if(Boolean.TRUE.equals(service.isSysAdmin(user))) {
-            retorno = service.getAllUserToDisplay(username);
+           return service.getAllUserToDisplay(username);
         }
-        else {
-            retorno = service.getUsersUnderDirection(user.getDireccion(), username);
-        }
-        return retorno;
+        return service.getUsersUnderDirection(user.getDireccion(), username);
+
     }
 
     //GET by ID

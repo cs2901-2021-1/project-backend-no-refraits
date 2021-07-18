@@ -48,19 +48,19 @@ public class UsuarioService {
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
             if (!item.getEmail().equals(gmail)){
-                var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
+                var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(item.getRol().getId()));
                 items.add(user);
             }
         }
         return items;
     }
 
-    public List<Usuario> getUsersUnderDirection(String direccion, String gmail){
-        List<Usuario> items = new ArrayList<>();
+    public List<UsuarioDisplay> getUsersUnderDirection(String direccion, String gmail){
+        List<UsuarioDisplay> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
         if (item.getDireccion().equals(direccion) && !item.getEmail().equals(gmail)){
-                var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId());
+                var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(item.getRol().getId()));
                 items.add(user);
             }
         }

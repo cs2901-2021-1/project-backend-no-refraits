@@ -22,14 +22,14 @@ public class AuthenticationController {
 
     private final UsuarioService usuarioService;
 
-    private final AuthenticationService authenticationUserService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UsuarioService usuarioService, AuthenticationService authenticationUserService) {
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UsuarioService usuarioService, AuthenticationService authenticationService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.usuarioService = usuarioService;
-        this.authenticationUserService = authenticationUserService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping(value = "/generate-token")
@@ -37,12 +37,12 @@ public class AuthenticationController {
         final var user = usuarioService.findOneByEmail(loginUser.getEmail());
         if (user == null)
         {
-            return new ApiResponse<>(404, "No existe este usuario", null);
+            return new Response<>(404, "No existe este usuario", null);
         }
         if(user.getNombre().equals("")){
             var newUser = new Usuario(loginUser.getEmail(), loginUser.getNombre(),loginUser.getPassword(), user.getDireccion(),user.getRol());
             usuarioService.update(newUser, user.getId());
-            authenticationUserService.updatePassword(user.getId());
+            authenticationService.updatePassword(user.getId());
         }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
@@ -54,7 +54,7 @@ public class AuthenticationController {
     @GetMapping(value = "/update-password")
     public String updatePasswordUser(){
         Usuario u = usuarioService.findOneByEmail("jbellido@uc.cl");
-        authenticationUserService.updatePassword(u.getId());
+        authenticationService.updatePassword(u.getId());
         return "OK";
     }
     @GetMapping(value="/checkiflogged")

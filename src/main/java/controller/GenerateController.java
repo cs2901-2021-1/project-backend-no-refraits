@@ -1,6 +1,6 @@
 package controller;
 
-import business.AuthenticationUserService;
+import business.AuthenticationService;
 import business.RolService;
 import data.entities.Rol;
 import data.entities.Usuario;
