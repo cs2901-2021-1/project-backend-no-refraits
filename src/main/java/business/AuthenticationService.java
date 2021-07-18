@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service(value = "AuthenticationUserService")
-public class AuthenticationUserService implements UserDetailsService{
+@Service(value = "AuthenticationService")
+public class AuthenticationService implements UserDetailsService{
     @Autowired
     private UsuarioRepository userDao;
 
