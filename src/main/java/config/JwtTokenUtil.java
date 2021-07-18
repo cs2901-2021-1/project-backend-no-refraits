@@ -1,4 +1,5 @@
 package config;
+
 import data.entities.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,10 +14,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Function;
 
+import static config.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
+import static config.Constants.SIGNING_KEY;
+
 @Component
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5*60*60;
+    public static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5L*60*60;
     public static final String SIGNING_KEY = "devglan123r";
     private UserDetailsService userDetailsService;
 

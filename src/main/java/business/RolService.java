@@ -1,6 +1,5 @@
 package business;
 
-
 import data.entities.Rol;
 import data.repositories.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +33,15 @@ public class RolService {
         return repository.findById(id).get();
     }
 
-    public Rol create(Rol item){
+    public Rol create(Rol item) {
         return repository.save(item);
     }
+
     public Rol update(Rol newRol, Long id) {
         Optional<Rol> findRol = repository.findById(id);
         if (findRol.isPresent()) {
             Rol rol = findRol.get();
-            rol.setName(newRol.getName() == null ? newRol.getName() : newRol.getName());
+            rol.setName(newRol.getName());
             return repository.save(rol);
         } else {
             newRol.setId(id);

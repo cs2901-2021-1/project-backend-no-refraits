@@ -1,6 +1,5 @@
 package data.entities;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 

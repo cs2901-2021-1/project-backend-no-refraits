@@ -1,13 +1,12 @@
 package data.entities;
 
-
-public class Response<T> {
+public class ApiResponse<T> {
 
     private int status;
     private String message;
-    private T result;
+    private Object result;
 
-    public Response(int status, String message, T result) {
+    public ApiResponse(int status, String message, Object result) {
         this.status = status;
         this.message = message;
         this.result = result;
@@ -33,7 +32,7 @@ public class Response<T> {
         return result;
     }
 
-    public void setResult(T result) {
+    public void setResult(Object result) {
         this.result = result;
     }
 }

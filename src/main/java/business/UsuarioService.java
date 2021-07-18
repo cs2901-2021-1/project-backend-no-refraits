@@ -1,9 +1,8 @@
 package business;
 
-
 import config.JwtTokenUtil;
-import data.entities.Rol;
 import data.entities.Usuario;
+import data.entities.UsuarioDisplay;
 import data.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,17 @@ import java.util.Optional;
 @Transactional
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository repository;
+    private final UsuarioRepository repository;
+
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    public UsuarioService(UsuarioRepository repository, JwtTokenUtil jwtTokenUtil) {
+        this.repository = repository;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
+
 
     private String roleName(long role){
         var retorno = "";
@@ -38,36 +43,32 @@ public class UsuarioService {
         return retorno;
     }
 
-    public List<Usuario> getAllUserToDisplay(String gmail){
-        List<Usuario> items = new ArrayList<>();
+    public List<UsuarioDisplay> getAllUserToDisplay(String gmail){
+        List<UsuarioDisplay> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
-            if (item.getEmail() != null){
-                if(!item.getEmail().equals(gmail)){
-                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
-                    items.add(user);
-                }
+            if (!item.getEmail().equals(gmail)){
+                var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(item.getRol().getId()));
+                items.add(user);
             }
         }
         return items;
     }
 
+    public List<UsuarioDisplay> getUsersUnderDirection(String direccion, String gmail){
+        List<UsuarioDisplay> items = new ArrayList<>();
+        var itemsUsuario = findAll();
+        for (Usuario item : itemsUsuario){
+        if (item.getDireccion().equals(direccion) && !item.getEmail().equals(gmail)){
+                var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(item.getRol().getId()));
+                items.add(user);
+            }
+        }
+        return items;
+    }
 
     public String getPrettyNameRolebyId(long roleId){
         return roleName(roleId);
-    }
-    public List<Usuario> getAllUsertoDisplay(String direccion,String gmail){
-        List<Usuario> items = new ArrayList<>();
-        var itemsUsuario = findAll();
-        for (Usuario item : itemsUsuario){
-            if (item.getEmail() != null && item.getDireccion().equals(direccion)){
-                if(!item.getEmail().equals(gmail)){
-                    var user = new Usuario(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
-                    items.add(user);
-                }
-            }
-        }
-        return items;
     }
 
     public List<Usuario> findAll(){
