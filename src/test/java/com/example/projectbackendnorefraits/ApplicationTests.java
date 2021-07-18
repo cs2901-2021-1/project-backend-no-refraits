@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UsuarioServiceTests {
+class ApplicationTests {
 
     @Autowired
     private MockMvc mvc;
@@ -42,7 +42,7 @@ class UsuarioServiceTests {
     public final String[] createTests = {
             "/usuarios/create/SYS_ADMIN/Dirección de Ciencias",
             "/usuarios/create/",
-            "/usuarios/create/bad/args",
+            "/usuarios/create/bad/args"
     };
 
     public final String[] getAllTests = {

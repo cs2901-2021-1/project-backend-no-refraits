@@ -10,34 +10,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.*;
-import java.util.Properties;
-
+import java.util.*;
 
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/testc")
-public class CourseController {
+public class UtecController {
     public final String user;
     public final String password;
     public final String url;
 
     public static final String QUERY_STR =
-            "SELECT\n" +
+            "SELECT DISTINCT\n" +
             "            AREA_FUNCIONAL.CODAREAFUNCIONAL                             AS \"id_direccion\"\n" +
-            "    ,       PERIODO.CODPERIODO                                          AS \"id_ciclo\"\n" +
-            "    ,       CURSO_SECCION.CODCURSOSECCION                               AS \"id_seccion\"\n" +
-            "    ,       CURSO_SESION.CODRDOCENTE                                    AS \"id_docente\"\n" +
-            "    ,       CURSO_SESION.CODTIPOSESIONMTD                               AS \"id_tipo_sesion\"\n" +
             "    ,       AREA_FUNCIONAL.DESCRIPLARGA                                 AS \"nombre_direccion\"\n" +
-            "    ,       PERIODO.DESCRIPCIONLARGA                                    AS \"nombre_ciclo\"\n" +
-            "    ,       CURSO_ACT.DESCRIPCIONLARGA                                  AS \"nombre_curso\"\n" +
-            "    ,       CURSO_SECCION_DATOS.DESCRIPCIONLARGA                        AS \"nombre_seccion\"\n" +
-            "    ,       CURSO_SESION_DATOS.DESCRIPCIONLARGA                         AS \"nombre_tipo_sesion\"\n" +
-            "    ,       UTEC.GET_NOMBRES_PERSONA(CURSO_SESION.CODRDOCENTE)          AS \"nombre_docente\"\n" +
-            "    ,       RANGO_PERIODO.FECHAINICIO                                   AS \"fecha_inicio\"\n" +
-            "    ,       RANGO_PERIODO.FECHAFIN                                      AS \"fecha_fin\"\n" +
-            "\n" +
             "FROM        PROGRAMACION.PRO_CURSO_SECCION CURSO_SECCION\n" +
             "\n" +
             "INNER JOIN  GENERAL.GEN_MAESTRO_TABLAS_DETALLE CURSO_SECCION_DATOS\n" +
@@ -84,7 +71,7 @@ public class CourseController {
             "AND         RANGO_PERIODO.FECHAINICIO >= TO_TIMESTAMP('2018-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')\n";
 
     @Autowired
-    CourseController(Environment env) {
+    UtecController(Environment env) {
         this.user = env.getProperty("UTEC_DB_USERNAME");
         this.password = env.getProperty("UTEC_DB_PASSWORD");
         this.url = env.getProperty("UTEC_DB_URL");
@@ -101,29 +88,26 @@ public class CourseController {
     }
 
     // temporary function
-    @GetMapping(value="/results")
-    public JSONObject printResults() throws SQLException, JSONException {
+    @GetMapping(value="/directions")
+    public List<Map<String, String>> getDirections() throws SQLException {
         try (Connection connection = this.getConnection()) {
             try (Statement statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery(QUERY_STR);
                 ResultSetMetaData rsmd = rs.getMetaData();
-                JSONObject obj = new JSONObject();
+                List<Map<String, String>> obj = new ArrayList<>();
 
-                for (int rowNum = 0; rs.next(); ++rowNum) {
-                    JSONObject item = new JSONObject();
+                while (rs.next()) {
+                    Map<String, String> item = new HashMap<>();
                     int numColumns = rsmd.getColumnCount();
                     for (int i=1; i<=numColumns; i++) {
                         String columnName = rsmd.getColumnName(i);
-                        item.put(columnName, rs.getObject(columnName));
+                        item.put(columnName, rs.getObject(columnName).toString());
                     }
-
-                    obj.put(String.valueOf(rowNum), item);
+                    obj.add(item);
                 }
                 rs.close();
                 return obj;
             }
         }
     }
-
-
 }
