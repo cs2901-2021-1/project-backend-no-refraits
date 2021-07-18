@@ -27,10 +27,6 @@ public class Login {
         return email;
     }
 
-    public void setUsername(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }

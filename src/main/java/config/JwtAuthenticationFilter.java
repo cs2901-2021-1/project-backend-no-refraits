@@ -18,6 +18,7 @@ import java.io.IOException;
 import static config.Constants.HEADER_STRING;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private static final String HEADERSTRING = "Authorization";
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -50,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             var userDetails = userDetailsService.loadUserByUsername(username);
 
-            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+            if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(authToken, userDetails))) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                 logger.info("usuario autenticado " + username);

@@ -1,7 +1,7 @@
 package controller;
 
-import business.AuthenticationUserService;
-import business.RolService;
+
+import business.AuthenticationService;
 import business.UsuarioService;
 import config.JwtTokenUtil;
 import data.entities.*;
@@ -16,26 +16,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/token")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final UsuarioService usuarioService;
+
+    private final AuthenticationService authenticationUserService;
 
     @Autowired
-    private RolService rolService;
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UsuarioService usuarioService, AuthenticationService authenticationUserService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.usuarioService = usuarioService;
+        this.authenticationUserService = authenticationUserService;
+    }
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private UsuarioService usuarioService;
-
-
-    @Autowired
-    private AuthenticationUserService authenticationUserService;
-
-    @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-    public ApiResponse<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {
-        System.out.println(loginUser.getEmail());
-        var user = usuarioService.findOneByEmail(loginUser.getEmail());
+    @PostMapping(value = "/generate-token")
+    public Response<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {
+        final var user = usuarioService.findOneByEmail(loginUser.getEmail());
         if (user == null)
         {
             return new ApiResponse<>(404, "No existe este usuario", null);
@@ -48,33 +47,25 @@ public class AuthenticationController {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
         final String token = jwtTokenUtil.generateToken(user);
-        var test = jwtTokenUtil.getUsernameFromToken(token);
-        return new ApiResponse<>(200, "success",
+        return new Response<>(200, "success",
                 new AuthData(token, user.getEmail(), usuarioService.getPrettyNameRolebyId(user.getRol().getId())));
     }
 
-    /*
-    @Autowired
-    private UsuarioService service;
-
-*/
-    @RequestMapping(value = "/update-password", method = RequestMethod.GET)
+    @GetMapping(value = "/update-password")
     public String updatePasswordUser(){
         Usuario u = usuarioService.findOneByEmail("jbellido@uc.cl");
         authenticationUserService.updatePassword(u.getId());
         return "OK";
     }
-    @RequestMapping(value="/checkiflogged", method = RequestMethod.GET)
+    @GetMapping(value="/checkiflogged")
     public boolean checkiflogged(@RequestHeader("Authorization") String token){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         if (username == null){
             return false;
         }
-        System.out.println(username);
-        System.out.println(!Boolean.TRUE.equals(jwtTokenUtil.isTokenExpired(token)));
         return !Boolean.TRUE.equals(jwtTokenUtil.isTokenExpired(token));
     }
-    @RequestMapping(value="/validatetypefofuser/{option}", method = RequestMethod.GET)
+    @GetMapping(value="/validatetypefofuser/{option}")
     public boolean validatetypefofuser(@RequestHeader("Authorization") String token, @PathVariable int option){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         if(username == null){
@@ -108,41 +99,41 @@ public class AuthenticationController {
     }
 
 
-    @RequestMapping(value="/checkifuser", method = RequestMethod.GET)
+    @GetMapping(value="/checkifuser")
     public Boolean checkifuser(@RequestHeader("Authorization") String token){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         return username != null;
     }
 
-    @RequestMapping(value="/checkifdiruser", method = RequestMethod.GET)
+    @GetMapping(value="/checkifdiruser")
     public Boolean checkifdiruser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 4);
     }
 
-    @RequestMapping(value="/checkifdgauser", method=RequestMethod.GET)
+    @GetMapping(value="/checkifdgauser")
     public Boolean checkifdgauser(@RequestHeader("Authorization") String token){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 3);
     }
 
-    @RequestMapping(value="/checkifadminuser", method = RequestMethod.GET)
+    @GetMapping(value="/checkifadminuser")
     public Boolean checkifadminuser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 2 || user.getRol().getId() == 1);
     }
 
-    @RequestMapping(value="/checkifadmindiruser", method = RequestMethod.GET)
+    @GetMapping(value="/checkifadmindiruser")
     public Boolean checkifadmindiruser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 2);
     }
 
-    @RequestMapping(value="/checkifsysadminuser", method = RequestMethod.GET)
+    @GetMapping(value="/checkifsysadminuser")
     public Boolean checkifsysadminuser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);

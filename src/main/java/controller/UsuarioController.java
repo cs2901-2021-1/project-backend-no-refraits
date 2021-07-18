@@ -14,27 +14,33 @@ import java.util.List;
 @RequestMapping("/usuarios")
 //@CrossOrigin(origins = "*")
 public class UsuarioController {
-    final static String clientUrl = "*";
+    static final String CLIENT_URL = "*";
+
+    private final UsuarioService service;
+
+    private final AuthenticationService authenticationUserService;
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final RolService rolService;
 
     @Autowired
-    private UsuarioService service;
+    public UsuarioController(UsuarioService service, AuthenticationService authenticationUserService, JwtTokenUtil jwtTokenUtil, RolService rolService) {
+        this.service = service;
+        this.authenticationUserService = authenticationUserService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.rolService = rolService;
+    }
 
-    @Autowired
-    private AuthenticationUserService authenticationUserService;
 
-    @Autowired
-    private  JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private RolService rolService;
 
     //POST
     @PostMapping("/create/{rol}/{direccion}")
-    @CrossOrigin(origins = clientUrl)
+    @CrossOrigin(origins = CLIENT_URL)
     public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion, @RequestBody Usuario nuevousuario, @RequestHeader("Authorization") String token) {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = service.findUsuarioByEmailAndNombreNotNull(username);
-        if(service.isSysAdmin(user)){
+        if(Boolean.TRUE.equals(service.isSysAdmin(user))) {
             var newrol = rolService.findOneByName(rol);
             nuevousuario.setRol(newrol);
             nuevousuario.setGoogleid("");
@@ -47,37 +53,36 @@ public class UsuarioController {
         nuevousuario.setRol(newrol);
         nuevousuario.setGoogleid("");
         nuevousuario.setNombre("");
-        System.out.println(user.getDireccion());
         nuevousuario.setDireccion(user.getDireccion());
         return authenticationUserService.save(nuevousuario);
     }
 
     //GET ALL
     @GetMapping("/getall")
-    @CrossOrigin(origins = clientUrl)
-    public List<UsuarioDisplay> readAll(@RequestHeader("Authorization") String token) {
+    @CrossOrigin(origins = CLIENT_URL)
+    public List<Usuario> readAll(@RequestHeader("Authorization") String token) {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = service.findUsuarioByEmailAndNombreNotNull(username);
-        List<UsuarioDisplay> retorno;
-        if(service.isSysAdmin(user)) {
+        List<Usuario> retorno;
+        if(Boolean.TRUE.equals(service.isSysAdmin(user))) {
             retorno = service.getAllUserToDisplay(username);
         }
         else {
-            retorno = service.getAllUsertoDisplay(user.getDireccion(), username);
+            retorno = service.getUsersUnderDirection(user.getDireccion(), username);
         }
         return retorno;
     }
 
     //GET by ID
     @GetMapping("/{id}")
-    @CrossOrigin(origins = clientUrl)
+    @CrossOrigin(origins = CLIENT_URL)
     public Usuario one(@PathVariable Long id, @RequestBody AuthData authData) { return service.findOne(id); }
 
 
     //DELETE by ID
     @DeleteMapping("/delete/{id}")
-    @CrossOrigin(origins = clientUrl)
-    void deleteUser(@PathVariable Long id) {
+    @CrossOrigin(origins = CLIENT_URL)
+    public void deleteUser(@PathVariable Long id) {
         service.deleteById(id);
     }
 
