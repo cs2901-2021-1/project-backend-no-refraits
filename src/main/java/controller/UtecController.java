@@ -42,7 +42,6 @@ public class UtecController {
         if(user.getRol().getId() == 3 || user.getRol().getId() == 4){
             return utecService.getCourseFromDireccion(user.getDireccion());
         }
-        System.out.println(direccionId);
         return utecService.getCourseFromDireccion(direccionId);
     }
     @GetMapping(value = "/ciclos")
