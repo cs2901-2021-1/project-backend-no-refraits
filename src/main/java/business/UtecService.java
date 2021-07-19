@@ -160,7 +160,7 @@ public class UtecService {
         }
     }
 
-    public List<Course> getCourseFromDireccion(String direccion) throws SQLException{
+    public List<Map<String, String>> getCourseFromDireccion(String direccion) throws SQLException{
         try(var connection = this.getConnection()){
             System.out.println(QUERYCURSOS);
             try ( PreparedStatement sentencia = connection.prepareStatement(QUERYCURSOS)){
@@ -168,18 +168,18 @@ public class UtecService {
                 sentencia.setString(1, direccion);
                 ResultSet rs = sentencia.executeQuery();
                 ResultSetMetaData rsmd = rs.getMetaData();
-                List<Course> list = new ArrayList<>();
-                while(rs.next()){
+                List<Map<String, String>> obj = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, String> item = new HashMap<>();
                     int numColumns = rsmd.getColumnCount();
-                    var curso = new Course();
-                    for (var i=1; i<=numColumns; i++){
+                    for (var i=1; i<=numColumns; i++) {
                         String columnName = rsmd.getColumnName(i);
-                        curso.setName(rs.getObject(columnName).toString());
+                        item.put(columnName, rs.getObject(columnName).toString());
                     }
-                    list.add(curso);
+                    obj.add(item);
                 }
                 rs.close();
-                return list;
+                return obj;
             }
         }
     }
