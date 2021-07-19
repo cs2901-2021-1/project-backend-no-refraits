@@ -3,7 +3,6 @@ package controller;
 import business.UsuarioService;
 import business.UtecService;
 import config.JwtTokenUtil;
-import data.entities.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

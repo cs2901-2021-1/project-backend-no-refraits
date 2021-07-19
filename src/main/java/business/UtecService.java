@@ -1,6 +1,5 @@
 package business;
 
-import data.entities.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -139,69 +138,44 @@ public class UtecService {
     }
 
     public List<Map<String, String>> getDirectionsFromCiclo(String ciclo) throws SQLException {
-        try (var connection = this.getConnection()) {
-            try (PreparedStatement sentencia = connection.prepareStatement(DIRECTIONS_QUERY_STR) ) {
-                sentencia.setString(1, ciclo);
+        return resultListFromQuery(ciclo, DIRECTIONS_QUERY_STR);
+    }
+
+    public List<Map<String, String>> getCourseFromDireccion(String direccion) throws SQLException{
+        return resultListFromQuery(direccion, QUERYCURSOS);
+    }
+
+    private List<Map<String, String>> resultListFromQuery(String direccion, String querycursos) throws SQLException {
+        try(var connection = this.getConnection()){
+            try ( PreparedStatement sentencia = connection.prepareStatement(querycursos)){
+                sentencia.setString(1, direccion);
                 ResultSet rs = sentencia.executeQuery();
-                ResultSetMetaData rsmd = rs.getMetaData();
-                List<Map<String, String>> obj = new ArrayList<>();
-                while (rs.next()) {
-                    Map<String, String> item = new HashMap<>();
-                    int numColumns = rsmd.getColumnCount();
-                    for (var i=1; i<=numColumns; i++) {
-                        String columnName = rsmd.getColumnName(i);
-                        item.put(columnName, rs.getObject(columnName).toString());
-                    }
-                    obj.add(item);
-                }
-                rs.close();
-                return obj;
+                return makeListFromResults(rs);
             }
         }
     }
 
-    public List<Map<String, String>> getCourseFromDireccion(String direccion) throws SQLException{
-        try(var connection = this.getConnection()){
-            System.out.println(QUERYCURSOS);
-            try ( PreparedStatement sentencia = connection.prepareStatement(QUERYCURSOS)){
-                System.out.println(direccion);
-                sentencia.setString(1, direccion);
-                ResultSet rs = sentencia.executeQuery();
-                ResultSetMetaData rsmd = rs.getMetaData();
-                List<Map<String, String>> obj = new ArrayList<>();
-                while (rs.next()) {
-                    Map<String, String> item = new HashMap<>();
-                    int numColumns = rsmd.getColumnCount();
-                    for (var i=1; i<=numColumns; i++) {
-                        String columnName = rsmd.getColumnName(i);
-                        item.put(columnName, rs.getObject(columnName).toString());
-                    }
-                    obj.add(item);
-                }
-                rs.close();
-                return obj;
+    private List<Map<String, String>> makeListFromResults(ResultSet rs) throws SQLException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        List<Map<String, String>> obj = new ArrayList<>();
+        while (rs.next()) {
+            Map<String, String> item = new HashMap<>();
+            int numColumns = rsmd.getColumnCount();
+            for (var i=1; i<=numColumns; i++) {
+                String columnName = rsmd.getColumnName(i);
+                item.put(columnName, rs.getObject(columnName).toString());
             }
+            obj.add(item);
         }
+        rs.close();
+        return obj;
     }
 
     public List<Map<String, String>> getAllCiclos() throws SQLException{
         try (var connection = this.getConnection()) {
             try (var statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery(QUERYCICLOS);
-                ResultSetMetaData rsmd = rs.getMetaData();
-                List<Map<String, String>> obj = new ArrayList<>();
-
-                while (rs.next()) {
-                    Map<String, String> item = new HashMap<>();
-                    int numColumns = rsmd.getColumnCount();
-                    for (var i=1; i<=numColumns; i++) {
-                        String columnName = rsmd.getColumnName(i);
-                        item.put(columnName, rs.getObject(columnName).toString());
-                    }
-                    obj.add(item);
-                }
-                rs.close();
-                return obj;
+                return makeListFromResults(rs);
             }
         }
     }
