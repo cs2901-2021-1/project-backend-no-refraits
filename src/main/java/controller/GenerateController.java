@@ -34,7 +34,7 @@ public class GenerateController {
 
     @GetMapping(value = "/generateusers")
     public String generateusers() {
-        createSysAdminUser("renato.rodriguez.l@utec.edu.pe", SYSADMINUSER);
+        createSysAdminUser("esteban.principe@utec.edu.pe", SYSADMINUSER);
         return "OK";
     }
 

@@ -63,7 +63,6 @@ public class UsuarioController {
     public List<UsuarioDisplay> readAll(@RequestHeader("Authorization") String token) {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = service.findUsuarioByEmailAndNombreNotNull(username);
-
         if(Boolean.TRUE.equals(service.isSysAdmin(user))) {
            return service.getAllUserToDisplay(username);
         }
@@ -74,8 +73,7 @@ public class UsuarioController {
     //GET by ID
     @GetMapping("/{id}")
     @CrossOrigin(origins = CLIENT_URL)
-    public Usuario one(@PathVariable Long id, @RequestBody AuthData authData) {
-
+    public Usuario one(@PathVariable Long id) {
         return service.findOne(id);
     }
 

@@ -3,7 +3,9 @@ package business;
 import data.entities.Usuario;
 import data.entities.UsuarioDisplay;
 import data.repositories.UsuarioRepository;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.context.SaveContextOnUpdateOrErrorResponseWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +45,8 @@ public class UsuarioService {
         List<UsuarioDisplay> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
-            if (!item.getEmail().equals(gmail)){
-                var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(item.getRol().getId()));
+            if (item.getEmail() != null && !gmail.equals(item.getEmail())){
+                var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
                 items.add(user);
             }
         }

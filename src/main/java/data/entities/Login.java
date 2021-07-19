@@ -4,8 +4,6 @@ public class Login {
 
     private String email;
     private String password;
-
-
     private String nombre;
 
     protected Login() {

@@ -74,7 +74,7 @@ public class UtecService {
 
 
     public Connection getConnection() throws SQLException {
-        Properties connectionProps = new Properties();
+        var connectionProps = new Properties();
         connectionProps.put("user", this.user);
         connectionProps.put("password", this.password);
 
@@ -82,8 +82,8 @@ public class UtecService {
     }
 
     public List<Map<String, String>> getAllDirections() throws SQLException {
-        try (Connection connection = this.getConnection()) {
-            try (Statement statement = connection.createStatement()) {
+        try (var connection = this.getConnection()) {
+            try (var statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery(DIRECTIONS_QUERY_STR);
                 ResultSetMetaData rsmd = rs.getMetaData();
                 List<Map<String, String>> obj = new ArrayList<>();
@@ -91,7 +91,7 @@ public class UtecService {
                 while (rs.next()) {
                     Map<String, String> item = new HashMap<>();
                     int numColumns = rsmd.getColumnCount();
-                    for (int i=1; i<=numColumns; i++) {
+                    for (var i=1; i<=numColumns; i++) {
                         String columnName = rsmd.getColumnName(i);
                         item.put(columnName, rs.getObject(columnName).toString());
                     }
