@@ -34,7 +34,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/generate-token")
     public Response<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {
-        final var user = usuarioService.findOneByEmail(loginUser.getEmail());
+        final var user = usuarioService.findUsuarioByEmailAndNombreNotNull(loginUser.getEmail());
         if (user == null)
         {
             return new Response<>(404, "No existe este usuario", null);
@@ -59,45 +59,14 @@ public class AuthenticationController {
     }
     @GetMapping(value="/checkiflogged")
     public boolean checkiflogged(@RequestHeader("Authorization") String token){
-        var username = jwtTokenUtil.getUsernameFromToken(token);
-        if (username == null){
+        try{
+            jwtTokenUtil.getUsernameFromToken(token);
+        }
+        catch (Exception e){
             return false;
         }
         return !Boolean.TRUE.equals(jwtTokenUtil.isTokenExpired(token));
     }
-    @GetMapping(value="/validatetypefofuser/{option}")
-    public boolean validatetypefofuser(@RequestHeader("Authorization") String token, @PathVariable int option){
-        var username = jwtTokenUtil.getUsernameFromToken(token);
-        if(username == null){
-            return false;
-        }
-        var check = false;
-        var user = usuarioService.findOneByEmail(username);
-        Long rolId = user.getRol().getId();
-        switch (option){
-            case 1: //If user is sysadmin
-                check = (rolId==1);
-                break;
-
-            case 2: //If user is diradmin
-                check = (rolId==2);
-                break;
-
-            case 3: //if user is dga
-                check = (rolId==3);
-                break;
-
-            case 4: //If user is diruser
-                check = (rolId==4);
-                break;
-
-            default:  //If is any kind of admin
-                check = (rolId==1 || rolId ==2);
-                break;
-        }
-        return check;
-    }
-
 
     @GetMapping(value="/checkifuser")
     public Boolean checkifuser(@RequestHeader("Authorization") String token){

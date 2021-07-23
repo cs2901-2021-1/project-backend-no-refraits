@@ -30,9 +30,9 @@ public class UtecController {
     }
 
     // temporary function
-    @GetMapping(value="/directions/{ciclo}")
-    public List<Map<String, String>> getDirections(@PathVariable String ciclo) throws SQLException {
-        return utecService.getDirectionsFromCiclo(ciclo);
+    @GetMapping(value="/directions")
+    public List<Map<String, String>> getDirections() throws SQLException {
+        return utecService.getAllDirections();
     }
 
     @GetMapping(value = "/cursos/{direccionId}")
@@ -43,10 +43,6 @@ public class UtecController {
             return utecService.getCourseFromDireccion(user.getDireccion());
         }
         return utecService.getCourseFromDireccion(direccionId);
-    }
-    @GetMapping(value = "/ciclos")
-    public List<Map<String, String>> getCiclos() throws SQLException  {
-        return  utecService.getAllCiclos();
     }
 
 }

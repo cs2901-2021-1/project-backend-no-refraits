@@ -38,6 +38,8 @@ public class UsuarioController {
     @PostMapping("/create/{rol}/{direccion}")
     @CrossOrigin(origins = CLIENT_URL)
     public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion, @RequestBody Usuario nuevousuario, @RequestHeader("Authorization") String token) {
+        var itexists = service.existsByEmail(nuevousuario.getEmail());
+        if (itexists) return null;
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = service.findUsuarioByEmailAndNombreNotNull(username);
         if(Boolean.TRUE.equals(service.isSysAdmin(user))) {

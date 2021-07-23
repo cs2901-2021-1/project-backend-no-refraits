@@ -77,6 +77,8 @@ public class UsuarioService {
         return items;
     }
 
+    public boolean existsByEmail(String email){return repository.existsByEmail(email);}
+
     public Boolean isSysAdmin(Usuario usuario){
         return usuario.getRol().getId()==1;
     }
