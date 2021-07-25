@@ -8,12 +8,15 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import data.entities.Login;
 import org.junit.jupiter.api.*;
+import org.springframework.test.web.servlet.MvcResult;
+
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -65,5 +68,41 @@ class ApplicationTests {
                     .andExpect(status().isUnauthorized());
         }
     }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    Login getLoginMockData() {
+        return new Login("esteban.villacorta@utec.edu.pe", "111014891633982592683");
+    }
+
+    MvcResult simulateLogin() throws Exception {
+        final var login = getLoginMockData();
+        return mvc.perform(post("/token/generate-token")
+                .content(asJsonString(login))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+    }
+
+    @Test
+    @Order(2)
+    void loginAllowedUserReturnsCode200AndToken() throws Exception {
+        final MvcResult simulateLogin = simulateLogin();
+        final String response = simulateLogin
+                .getResponse()
+                .getContentAsString();
+        final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
+        final Integer status = JsonPath.parse(response).read("$[\"status\"]");
+        Assertions.assertEquals(200, status);
+        Assertions.assertNotNull(token);
+    }
+
 
 }
