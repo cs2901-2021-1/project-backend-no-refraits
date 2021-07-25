@@ -8,5 +8,5 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class Prediccion {
     @NonNull @Getter @Setter
-    private String prediccion;
+    private String value;
 }

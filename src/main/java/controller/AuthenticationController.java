@@ -36,14 +36,8 @@ public class AuthenticationController {
     @PostMapping(value = "/generate-token")
     public Response<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {
         final var user = usuarioService.findUsuarioByEmailAndNombreNotNull(loginUser.getEmail());
-        if (user == null)
-        {
+        if (user == null) {
             return new Response<>(404, "No existe este usuario", null);
-        }
-        if(user.getNombre().equals("")){
-            var newUser = new Usuario(loginUser.getEmail(), loginUser.getNombre(),loginUser.getPassword(), user.getDireccion(),user.getRol());
-            usuarioService.update(newUser, user.getId());
-            authenticationService.updatePassword(user.getId());
         }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
@@ -52,12 +46,6 @@ public class AuthenticationController {
                 new AuthData(token, user.getEmail(), usuarioService.getPrettyNameRolebyId(user.getRol().getId())));
     }
 
-    @GetMapping(value = "/update-password")
-    public String updatePasswordUser(){
-        Usuario u = usuarioService.findOneByEmail("jbellido@uc.cl");
-        authenticationService.updatePassword(u.getId());
-        return "OK";
-    }
     @GetMapping(value="/checkiflogged")
     public boolean checkiflogged(@RequestHeader("Authorization") String token){
         if (!checkifuser(token))

@@ -31,17 +31,17 @@ class ApplicationTests {
     @Autowired
     private MockMvc mvc;
 
-    public final String[] createTests = {
-            "/usuarios/create/SYS_ADMIN/Dirección de Ciencias",
+    public final String[] createUserTests = {
+            "/usuarios/create/SYS_ADMIN/81",
             "/usuarios/create/",
             "/usuarios/create/bad/args"
     };
 
-    public final String[] getAllTests = {
+    public final String[] getAllUserTests = {
             "/usuarios/getall"
     };
 
-    public final String[] getOneTests = {
+    public final String[] getOneUserTests = {
             "/usuarios/1",
             "/usuarios/898989898",
             "/usuarios/badarg",
@@ -53,58 +53,24 @@ class ApplicationTests {
             "/usuarios/delete/badarg",
     };
 
-    public final String[][] testUrls = {
-            createTests,
-            getAllTests,
-            getOneTests,
+    public final String[][] userTestUrls = {
+            createUserTests,
+            getAllUserTests,
+            getOneUserTests,
             deleteOneTests,
     };
 
     @Test
     @Order(1)
     void unloggedUserRejectedFromRestrictedViews() throws Exception {
-        for (var testSet : testUrls) {
+        for (var testSet : userTestUrls) {
             var testUrl = testSet[0];
             mvc.perform(post(testUrl))
                     .andExpect(status().isUnauthorized());
         }
     }
 
-    public static String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    Login getLoginMockData() {
-        return new Login("esteban.villacorta@utec.edu.pe", "111014891633982592683");
-    }
-
-    Login fakeLoginMockData() {
-        return new Login("absolutely.fake@fake.edu.pe", "111014891633982592683");
-    }
-    
-    MvcResult simulateLogin() throws Exception {
-        final var login = getLoginMockData();
-        return mvc.perform(post("/token/generate-token")
-                .content(asJsonString(login))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn();
-    }
-
-    MvcResult simulateLoginFail() throws Exception {
-        final var login = fakeLoginMockData();
-        return mvc.perform(post("/token/generate-token")
-                .content(asJsonString(login))
-                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-    
     @Test
     @Order(2)
     void loginAllowedUserReturnsCode200AndToken() throws Exception {
@@ -135,8 +101,8 @@ class ApplicationTests {
     @Test
     @Order(3)
     void nonExistentUserRejectedOnLogin() throws Exception {
-        final MvcResult simulateLogin = simulateLoginFail();
-        final String response = simulateLogin
+        final MvcResult result = simulateLoginFail();
+        final String response = result
                 .getResponse()
                 .getContentAsString();
 
@@ -155,4 +121,41 @@ class ApplicationTests {
                 .andExpect(content().string("false"));
 
     }
+
+
+    public static String asJsonString(final Object obj) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    Login getLoginMockData() {
+        return new Login("esteban.villacorta@utec.edu.pe", "111014891633982592683");
+    }
+
+    Login fakeLoginMockData() {
+        return new Login("absolutely.fake@fake.edu.pe", "111014891633982592683");
+    }
+
+    MvcResult simulateLogin() throws Exception {
+        final var login = getLoginMockData();
+        return mvc.perform(post("/token/generate-token")
+                .content(asJsonString(login))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+    }
+
+    MvcResult simulateLoginFail() throws Exception {
+        final var login = fakeLoginMockData();
+        return mvc.perform(post("/token/generate-token")
+                .content(asJsonString(login))
+                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().is4xxClientError())
+                .andReturn();
+    }
+
 }

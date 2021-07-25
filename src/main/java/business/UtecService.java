@@ -116,7 +116,6 @@ public class UtecService {
         assert this.user != null && this.password != null && this.url != null;
     }
 
-
     public Connection getConnection() throws SQLException {
         var connectionProps = new Properties();
         connectionProps.put("user", this.user);
