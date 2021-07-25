@@ -6,7 +6,13 @@ public class Login {
     private String password;
     private String nombre;
 
-    protected Login() {
+    public Login() {
+    }
+
+    public Login(String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.nombre = "";
     }
 
     public void setEmail(String email) {
@@ -31,5 +37,13 @@ public class Login {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Login{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
