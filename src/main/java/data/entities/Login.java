@@ -9,6 +9,13 @@ public class Login {
     protected Login() {
     }
 
+    public Login(String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.nombre = "";
+    }
+
+
     public void setEmail(String email) {
         this.email = email;
     }
