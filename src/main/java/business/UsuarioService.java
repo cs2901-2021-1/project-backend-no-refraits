@@ -43,7 +43,7 @@ public class UsuarioService {
         List<UsuarioDisplay> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
-            if (item.getEmail() != null && !gmail.equals(item.getEmail())){
+            if (!gmail.equals(item.getEmail())){
                 var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(repository.getRolidbyID(item.getId())));
                 items.add(user);
             }
@@ -55,7 +55,7 @@ public class UsuarioService {
         List<UsuarioDisplay> items = new ArrayList<>();
         var itemsUsuario = findAll();
         for (Usuario item : itemsUsuario){
-        if (item.getDireccion().equals(direccion) && !item.getEmail().equals(gmail)){
+            if (item.getDireccion().equals(direccion) && !item.getEmail().equals(gmail)){
                 var user = new UsuarioDisplay(item.getNombre(), item.getEmail(), item.getDireccion(), item.getId(), roleName(item.getRol().getId()));
                 items.add(user);
             }
@@ -68,13 +68,7 @@ public class UsuarioService {
     }
 
     public List<Usuario> findAll(){
-        List<Usuario> items = new ArrayList<>();
-        for (Usuario item :repository.findAll()) {
-            var user = new Usuario();
-            items.add(user);
-            items.add(item);
-        }
-        return items;
+        return repository.findAll();
     }
 
     public boolean existsByEmail(String email){return repository.existsByEmail(email);}

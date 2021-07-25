@@ -17,12 +17,7 @@ public class RolService {
     private RolRepository repository;
 
     public List<Rol> findAll(){
-        List<Rol> items = new ArrayList<>();
-
-        for (Rol item :repository.findAll()) {
-            items.add(item);
-        }
-        return items;
+        return repository.findAll();
     }
 
     public Rol findOneByName(String name){

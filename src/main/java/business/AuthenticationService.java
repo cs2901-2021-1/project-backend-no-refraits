@@ -44,9 +44,7 @@ public class AuthenticationService implements UserDetailsService{
      }**/
 
     public List<Usuario> findAll() {
-        List<Usuario> list = new ArrayList<>();
-        userDao.findAll().iterator().forEachRemaining(list::add);
-        return list;
+        return userDao.findAll();
     }
 
     public void delete(long id) {
