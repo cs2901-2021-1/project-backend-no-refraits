@@ -5,6 +5,7 @@ import business.AuthenticationService;
 import business.UsuarioService;
 import config.JwtTokenUtil;
 import data.entities.*;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,51 +60,51 @@ public class AuthenticationController {
     }
     @GetMapping(value="/checkiflogged")
     public boolean checkiflogged(@RequestHeader("Authorization") String token){
-        try{
-            jwtTokenUtil.getUsernameFromToken(token);
-        }
-        catch (Exception e){
+        if (!checkifuser(token))
             return false;
-        }
         return !Boolean.TRUE.equals(jwtTokenUtil.isTokenExpired(token));
     }
 
     @GetMapping(value="/checkifuser")
-    public Boolean checkifuser(@RequestHeader("Authorization") String token){
-        var username = jwtTokenUtil.getUsernameFromToken(token);
-        return username != null;
+    public boolean checkifuser(@RequestHeader("Authorization") String token){
+        try {
+            var username = jwtTokenUtil.getUsernameFromToken(token);
+            return username != null;
+        } catch (MalformedJwtException e) {
+            return false;
+        }
     }
 
     @GetMapping(value="/checkifdiruser")
-    public Boolean checkifdiruser(@RequestHeader("Authorization") String token ){
+    public boolean checkifdiruser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 4);
     }
 
     @GetMapping(value="/checkifdgauser")
-    public Boolean checkifdgauser(@RequestHeader("Authorization") String token){
+    public boolean checkifdgauser(@RequestHeader("Authorization") String token){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 3);
     }
 
     @GetMapping(value="/checkifadminuser")
-    public Boolean checkifadminuser(@RequestHeader("Authorization") String token ){
+    public boolean checkifadminuser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 2 || user.getRol().getId() == 1);
     }
 
     @GetMapping(value="/checkifadmindiruser")
-    public Boolean checkifadmindiruser(@RequestHeader("Authorization") String token ){
+    public boolean checkifadmindiruser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 2);
     }
 
     @GetMapping(value="/checkifuserbelongstodirec")
-    public Boolean checkifuserbelongstodirec(@RequestHeader("Authorization") String token ){
+    public boolean checkifuserbelongstodirec(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 3 || user.getRol().getId() == 4);
@@ -111,7 +112,7 @@ public class AuthenticationController {
 
 
     @GetMapping(value="/checkifsysadminuser")
-    public Boolean checkifsysadminuser(@RequestHeader("Authorization") String token ){
+    public boolean checkifsysadminuser(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
         return (user.getRol().getId() == 1);

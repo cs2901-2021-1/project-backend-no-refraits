@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 public class AiController {
     static final String CLIENT_URL = "*";
 
+    public AiController() {
+        // Done
+    }
+
     @PostMapping("/prediccion")
     @CrossOrigin(origins = CLIENT_URL)
     public Prediccion prediccion(@RequestBody AiDto aiDto, @RequestHeader("Authorization") String token){

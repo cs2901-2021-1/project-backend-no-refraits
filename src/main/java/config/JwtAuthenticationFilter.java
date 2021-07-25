@@ -1,6 +1,7 @@
 package config;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,12 +34,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authToken = header;
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
-            } catch (IllegalArgumentException e) {
-                logger.error("Error al conseguir el username con el token", e);
             } catch (ExpiredJwtException e) {
                 logger.warn("Token expirado", e);
-            } catch(SignatureException e){
+            } catch(Exception e){
                 logger.error("Error en la autenticacion");
+                chain.doFilter(req, res);
+                return;
             }
         } else {
             logger.warn("error con el token");

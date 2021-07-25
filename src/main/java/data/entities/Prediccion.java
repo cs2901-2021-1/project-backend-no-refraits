@@ -1,17 +1,12 @@
 package data.entities;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+@RequiredArgsConstructor
 public class Prediccion {
+    @NonNull @Getter @Setter
     private String prediccion;
-
-    public Prediccion(String prediccion) {
-        this.prediccion = prediccion;
-    }
-
-    public String getPrediccion() {
-        return prediccion;
-    }
-
-    public void setPrediccion(String prediccion) {
-        this.prediccion = prediccion;
-    }
 }

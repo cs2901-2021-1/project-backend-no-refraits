@@ -83,6 +83,10 @@ class ApplicationTests {
         return new Login("esteban.villacorta@utec.edu.pe", "111014891633982592683");
     }
 
+    Login fakeLoginMockData() {
+        return new Login("absolutely.fake@fake.edu.pe", "111014891633982592683");
+    }
+    
     MvcResult simulateLogin() throws Exception {
         final var login = getLoginMockData();
         return mvc.perform(post("/token/generate-token")
@@ -92,6 +96,15 @@ class ApplicationTests {
                 .andReturn();
     }
 
+    MvcResult simulateLoginFail() throws Exception {
+        final var login = fakeLoginMockData();
+        return mvc.perform(post("/token/generate-token")
+                .content(asJsonString(login))
+                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().is4xxClientError())
+                .andReturn();
+    }
+    
     @Test
     @Order(2)
     void loginAllowedUserReturnsCode200AndToken() throws Exception {
@@ -106,7 +119,7 @@ class ApplicationTests {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     void userIsLoggedAfterSendingLoginData() throws Exception {
         final MvcResult result = simulateLogin();
         final String response = result.getResponse().getContentAsString();
@@ -117,5 +130,29 @@ class ApplicationTests {
                 .header("Authorization", token))
                 .andExpect(content().contentType("application/json"))
                 .andExpect(content().string("true"));
+    }
+
+    @Test
+    @Order(3)
+    void nonExistentUserRejectedOnLogin() throws Exception {
+        final MvcResult simulateLogin = simulateLoginFail();
+        final String response = simulateLogin
+                .getResponse()
+                .getContentAsString();
+
+        final Integer status = JsonPath.parse(response).read("$[\"status\"]");
+        Assertions.assertEquals(404, status);
+    }
+
+    @Test
+    @Order(4)
+    void invalidTokenIsRejected() throws Exception {
+        final String falseToken = "this.isa.falsetoken";
+        mvc.perform(get("/token/checkiflogged")
+                .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
+                .header("Authorization", falseToken))
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().string("false"));
+
     }
 }
