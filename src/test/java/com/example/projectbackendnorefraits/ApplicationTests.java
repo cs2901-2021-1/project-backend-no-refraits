@@ -24,11 +24,6 @@ class ApplicationTests {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
-    @Autowired
-    private UsuarioService userService;
-
-
     public final String[] createTests = {
             "/usuarios/create/SYS_ADMIN/Dirección de Ciencias",
             "/usuarios/create/",
