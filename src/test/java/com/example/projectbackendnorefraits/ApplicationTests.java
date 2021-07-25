@@ -18,8 +18,9 @@ import org.junit.jupiter.api.*;
 import org.springframework.test.web.servlet.MvcResult;
 
 
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -104,5 +105,17 @@ class ApplicationTests {
         Assertions.assertNotNull(token);
     }
 
+    @Test
+    @Order(3)
+    void userIsLoggedAfterSendingLoginData() throws Exception {
+        final MvcResult result = simulateLogin();
+        final String response = result.getResponse().getContentAsString();
+        final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
+        mvc.perform(get("/token/checkiflogged")
+                .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
+                .header("Authorization", token))
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().string("true"));
+    }
 }
