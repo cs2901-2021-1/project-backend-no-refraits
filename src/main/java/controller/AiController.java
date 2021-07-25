@@ -13,10 +13,6 @@ public class AiController {
     @PostMapping("/prediccion")
     @CrossOrigin(origins = CLIENT_URL)
     public Prediccion prediccion(@RequestBody AiDto aiDto, @RequestHeader("Authorization") String token){
-        System.out.println(aiDto.getDireccion());
-        System.out.println(aiDto.getCurso());
-
-
         return new Prediccion("23");
     }
 
