@@ -3,7 +3,6 @@ package com.example.projectbackendnorefraits;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import data.entities.Login;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
