@@ -5,7 +5,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.ConnectException;
 import java.sql.*;
 import java.util.*;
 
@@ -110,13 +109,11 @@ public class UtecService {
     public final String url;
 
     @Autowired
-    UtecService(Environment env) throws ConnectException {
+    UtecService(Environment env) {
         this.user = env.getProperty("UTEC_DB_USERNAME");
         this.password = env.getProperty("UTEC_DB_PASSWORD");
         this.url = env.getProperty("UTEC_DB_URL");
-        if (this.user == null || this.password == null || this.url == null) {
-            throw new ConnectException("Unset environment properties for connection");
-        }
+        assert this.user != null && this.password != null && this.url != null;
     }
 
 

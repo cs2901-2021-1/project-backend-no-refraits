@@ -11,13 +11,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.logging.Logger;
-
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/token")
 public class AuthenticationController {
-    static Logger logger = Logger.getLogger(AuthenticationController.class.getName());
 
     private final AuthenticationManager authenticationManager;
 
@@ -37,18 +34,16 @@ public class AuthenticationController {
 
     @PostMapping(value = "/generate-token")
     public Response<AuthData> register(@RequestBody Login loginUser) throws AuthenticationException {
-        logger.warning(loginUser::toString);
         final var user = usuarioService.findUsuarioByEmailAndNombreNotNull(loginUser.getEmail());
         if (user == null)
         {
             return new Response<>(404, "No existe este usuario", null);
         }
-
-        logger.warning(loginUser.getPassword());
-
-        var newUser = new Usuario(loginUser.getEmail(), loginUser.getNombre(), loginUser.getPassword(), user.getDireccion(),user.getRol());
-        usuarioService.update(newUser, user.getId());
-        authenticationService.updatePassword(user.getId());
+        if(user.getNombre().equals("")){
+            var newUser = new Usuario(loginUser.getEmail(), loginUser.getNombre(),loginUser.getPassword(), user.getDireccion(),user.getRol());
+            usuarioService.update(newUser, user.getId());
+            authenticationService.updatePassword(user.getId());
+        }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
         final String token = jwtTokenUtil.generateToken(user);
@@ -62,10 +57,8 @@ public class AuthenticationController {
         authenticationService.updatePassword(u.getId());
         return "OK";
     }
-
     @GetMapping(value="/checkiflogged")
     public boolean checkiflogged(@RequestHeader("Authorization") String token){
-        logger.warning(token);
         try{
             jwtTokenUtil.getUsernameFromToken(token);
         }
