@@ -16,12 +16,10 @@ import com.jayway.jsonpath.JsonPath;
 import data.entities.Login;
 import org.junit.jupiter.api.*;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -65,8 +63,8 @@ class ApplicationTests {
     void unloggedUserRejectedFromRestrictedViews() throws Exception {
         for (var testSet : userTestUrls) {
             var testUrl = testSet[0];
-            mvc.perform(post(testUrl))
-                    .andExpect(status().isUnauthorized());
+            mvc.perform(MockMvcRequestBuilders.post(testUrl))
+                    .andExpect(MockMvcResultMatchers.status().isUnauthorized());
         }
     }
 
@@ -91,11 +89,11 @@ class ApplicationTests {
         final String response = result.getResponse().getContentAsString();
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
-        mvc.perform(get("/token/checkiflogged")
+        mvc.perform(MockMvcRequestBuilders.get("/token/checkiflogged")
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", token))
-                .andExpect(content().contentType("application/json"))
-                .andExpect(content().string("true"));
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("true"));
     }
 
     @Test
@@ -114,11 +112,12 @@ class ApplicationTests {
     @Order(4)
     void invalidTokenIsRejected() throws Exception {
         final String falseToken = "this.isa.falsetoken";
-        mvc.perform(get("/token/checkiflogged")
+        mvc.perform(MockMvcRequestBuilders.get("/token/checkiflogged")
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", falseToken))
-                .andExpect(content().contentType("application/json"))
-                .andExpect(content().string("false"));
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("false"))
+                .andDo(MockMvcResultHandlers.print());
 
     }
 
@@ -142,16 +141,17 @@ class ApplicationTests {
 
     MvcResult simulateLogin() throws Exception {
         final var login = getLoginMockData();
-        return mvc.perform(post("/token/generate-token")
+        return mvc.perform(MockMvcRequestBuilders.post("/token/generate-token")
                 .content(asJsonString(login))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }
 
     MvcResult simulateLoginFail() throws Exception {
         final var login = fakeLoginMockData();
-        return mvc.perform(post("/token/generate-token")
+        return mvc.perform(MockMvcRequestBuilders.post("/token/generate-token")
                 .content(asJsonString(login))
                 .contentType(MediaType.APPLICATION_JSON))
 //                .andExpect(status().is4xxClientError())
