@@ -5,6 +5,5 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class PredictionRequest {
-    @NonNull @Getter @Setter
-    private String curso;
+    @NonNull @Getter @Setter private String curso;
 }

@@ -5,8 +5,6 @@ import business.AuthenticationService;
 import business.UsuarioService;
 import config.JwtTokenUtil;
 import data.entities.*;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,11 +36,9 @@ public class AuthenticationController {
         if (user == null) {
             return new Response<>(404, "No existe este usuario", null);
         }
-        System.out.println("aqui1");
         if(!usuarioService.isUserRegistered(user)){
             usuarioService.registerUser(user, loginUser.getPassword());
         }
-        System.out.println("aqui2");
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
         final String token = jwtTokenUtil.generateToken(user);

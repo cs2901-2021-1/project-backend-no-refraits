@@ -4,7 +4,6 @@ package data.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -37,12 +36,4 @@ public class Usuario implements Serializable {
     @ManyToOne
     @JoinColumn (name = "rol_id", nullable = false)
     private Rol rol;
-
-    public Usuario(String email, String nombre, String googleId, String direccion, Rol rol) {
-        this.email = email;
-        this.nombre = nombre;
-        this.googleid = googleId;
-        this.direccion = direccion;
-        this.rol = rol;
-    }
 }

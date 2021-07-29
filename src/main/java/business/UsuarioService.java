@@ -57,8 +57,8 @@ public class UsuarioService {
     public boolean isUserRegistered(Usuario user){
         return !user.getGoogleid().equals("$2a$10$JjA2UATuo3IQwsBmDTfxzuvDtPcl/8ezTaEPJLuAjtALGXs1DWHHu");
     }
+
     public void registerUser(Usuario user, String password){
-        System.out.println("Usuario no registro... ahora se esta registrando");
         user.setGoogleid(bcryptEncoder.encode(password));
         repository.save(user);
     }
@@ -93,7 +93,7 @@ public class UsuarioService {
         return usuario.getRol().getId()==2;
     }
 
-    public Usuario findOne(long id){
+    public Usuario findOne(long id) {
         return repository.findById(id).get();
     }
 
