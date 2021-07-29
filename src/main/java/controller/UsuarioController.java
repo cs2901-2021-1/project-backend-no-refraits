@@ -16,7 +16,7 @@ import java.util.List;
 public class UsuarioController {
     static final String CLIENT_URL = "*";
 
-    private final UsuarioService service;
+    private final UsuarioService usuarioService;
 
     private final AuthenticationService authenticationService;
 
@@ -25,38 +25,36 @@ public class UsuarioController {
     private final RolService rolService;
 
     @Autowired
-    public UsuarioController(UsuarioService service, AuthenticationService authenticationService, JwtTokenUtil jwtTokenUtil, RolService rolService) {
-        this.service = service;
+    public UsuarioController(UsuarioService usuarioService, AuthenticationService authenticationService, JwtTokenUtil jwtTokenUtil, RolService rolService) {
+        this.usuarioService = usuarioService;
         this.authenticationService = authenticationService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.rolService = rolService;
     }
 
-
-
     //POST
     @PostMapping("/create/{rol}/{direccion}")
     @CrossOrigin(origins = CLIENT_URL)
-    public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion, @RequestBody Usuario nuevousuario, @RequestHeader("Authorization") String token) {
-        var itexists = service.existsByEmail(nuevousuario.getEmail());
+    public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion, @RequestBody Usuario usuario, @RequestHeader("Authorization") String token) {
+        var itexists = usuarioService.existsByEmail(usuario.getEmail());
         if (itexists) return null;
         var username = jwtTokenUtil.getUsernameFromToken(token);
-        var user = service.findUsuarioByEmailAndNombreNotNull(username);
-        if(Boolean.TRUE.equals(service.isSysAdmin(user))) {
+        var user = usuarioService.findUsuarioByEmailAndNombreNotNull(username);
+        if(Boolean.TRUE.equals(usuarioService.isSysAdmin(user))) {
             var newrol = rolService.findOneByName(rol);
-            nuevousuario.setRol(newrol);
-            nuevousuario.setGoogleid("");
-            nuevousuario.setNombre("");
-            nuevousuario.setDireccion(direccion);
-            return authenticationService.save(nuevousuario);
+            usuario.setRol(newrol);
+            usuario.setGoogleid("");
+            usuario.setNombre("");
+            usuario.setDireccion(direccion);
+            return authenticationService.save(usuario);
         }
 
         var newrol = rolService.findOneByName("DIR_USER");
-        nuevousuario.setRol(newrol);
-        nuevousuario.setGoogleid("");
-        nuevousuario.setNombre("");
-        nuevousuario.setDireccion(user.getDireccion());
-        return authenticationService.save(nuevousuario);
+        usuario.setRol(newrol);
+        usuario.setGoogleid("");
+        usuario.setNombre("");
+        usuario.setDireccion(user.getDireccion());
+        return authenticationService.save(usuario);
     }
 
     //GET ALL
@@ -64,11 +62,11 @@ public class UsuarioController {
     @CrossOrigin(origins = CLIENT_URL)
     public List<UsuarioDisplay> readAll(@RequestHeader("Authorization") String token) {
         var username = jwtTokenUtil.getUsernameFromToken(token);
-        var user = service.findUsuarioByEmailAndNombreNotNull(username);
-        if(Boolean.TRUE.equals(service.isSysAdmin(user))) {
-           return service.getAllUserToDisplay(username);
+        var user = usuarioService.findUsuarioByEmailAndNombreNotNull(username);
+        if(Boolean.TRUE.equals(usuarioService.isSysAdmin(user))) {
+           return usuarioService.getAllUserToDisplay(username);
         }
-        return service.getUsersUnderDirection(user.getDireccion(), username);
+        return usuarioService.getUsersUnderDirection(user.getDireccion(), username);
 
     }
 
@@ -76,7 +74,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     @CrossOrigin(origins = CLIENT_URL)
     public Usuario one(@PathVariable Long id) {
-        return service.findOne(id);
+        return usuarioService.findOne(id);
     }
 
 
@@ -84,7 +82,7 @@ public class UsuarioController {
     @DeleteMapping("/delete/{id}")
     @CrossOrigin(origins = CLIENT_URL)
     public void deleteUser(@PathVariable Long id) {
-        service.deleteById(id);
+        usuarioService.deleteById(id);
     }
 
 }

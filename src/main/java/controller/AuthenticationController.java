@@ -5,6 +5,7 @@ import business.AuthenticationService;
 import business.UsuarioService;
 import config.JwtTokenUtil;
 import data.entities.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,6 +49,7 @@ public class AuthenticationController {
 
     @GetMapping(value="/checkiflogged")
     public boolean checkiflogged(@RequestHeader("Authorization") String token){
+
         if (!checkifuser(token))
             return false;
         return !Boolean.TRUE.equals(jwtTokenUtil.isTokenExpired(token));
@@ -58,7 +60,7 @@ public class AuthenticationController {
         try {
             var username = jwtTokenUtil.getUsernameFromToken(token);
             return username != null;
-        } catch (MalformedJwtException e) {
+        } catch (Exception e) {
             return false;
         }
     }

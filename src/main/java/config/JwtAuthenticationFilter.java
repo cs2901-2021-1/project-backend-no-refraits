@@ -33,7 +33,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (ExpiredJwtException e) {
-                logger.warn("Token expirado", e);
+                logger.warn("Token expirado");
+                chain.doFilter(req, res);
+                return;
             } catch(Exception e){
                 logger.error("Error en la autenticacion");
                 chain.doFilter(req, res);

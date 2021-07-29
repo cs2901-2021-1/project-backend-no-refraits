@@ -14,6 +14,31 @@ import java.util.*;
 
 @Service(value = "AuthenticationService")
 public class AuthenticationService implements UserDetailsService{
+    private Set<SimpleGrantedAuthority> getAuthority(Usuario user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRol().getName()));
+        return authorities;
+    }
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = usuarioRepository.findUsuarioByEmail(username);
+        if(user == null){
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getGoogleid(), getAuthority(user));
+    }
+    private final UsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder bcryptEncoder;
+    @Autowired
+    public AuthenticationService(UsuarioRepository usuarioRepository, BCryptPasswordEncoder bcryptEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.bcryptEncoder = bcryptEncoder;
+    }
+    public Usuario save(Usuario user) {
+        user.setGoogleid(bcryptEncoder.encode(user.getGoogleid()));
+        return usuarioRepository.save(user);
+    }
+    /*
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder bcryptEncoder;
 
@@ -36,9 +61,5 @@ public class AuthenticationService implements UserDetailsService{
         return authorities;
     }
 
-
-    public Usuario save(Usuario user) {
-        user.setGoogleid(bcryptEncoder.encode(user.getGoogleid()));
-        return usuarioRepository.save(user);
-    }
+    */
 }
