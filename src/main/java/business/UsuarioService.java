@@ -58,7 +58,6 @@ public class UsuarioService {
         return !user.getGoogleid().equals("$2a$10$X91IHQASjCLaIxYLEAeT6.jzCotLkupnWVRWHa6XQZwhdxQSKnZ/u");
     }
     public void registerUser(Usuario user, String password){
-        System.out.println("Usuario no registro... ahora se esta registrando");
         user.setGoogleid(bcryptEncoder.encode(password));
         repository.save(user);
     }
