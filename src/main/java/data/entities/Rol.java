@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="rol")
-@RequiredArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Rol implements Serializable {
     @Id @Getter @Setter
     @GeneratedValue(strategy= GenerationType.IDENTITY)

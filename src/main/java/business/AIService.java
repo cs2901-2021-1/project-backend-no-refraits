@@ -18,8 +18,8 @@ import java.util.List;
 @Transactional
 @NoArgsConstructor
 public class AIService {
-    String urlAIServerPredict = "https://b8acm33416.execute-api.us-east-2.amazonaws.com/test/analytics/predict_next_semester";
-    String urlAIServerPast = "https://b8acm33416.execute-api.us-east-2.amazonaws.com/test/analytics/past_predictions";
+    public static final String URL_PREDICT = "https://b8acm33416.execute-api.us-east-2.amazonaws.com/test/analytics/predict_next_semester";
+    public static final String URL_REPORT = "https://b8acm33416.execute-api.us-east-2.amazonaws.com/test/analytics/past_predictions";
 
 
     private HttpResponse<String> requestDataToEndpoint(String course, String endpoint) throws IOException, InterruptedException {
@@ -32,14 +32,14 @@ public class AIService {
     }
 
     public PredictionResponse getPrediction (String course) throws IOException, InterruptedException {
-        HttpResponse<String> response = requestDataToEndpoint(course, urlAIServerPredict);
+        HttpResponse<String> response = requestDataToEndpoint(course, URL_PREDICT);
         var mapper = new ObjectMapper();
         return mapper.readValue(response.body(), new TypeReference<>() {});
     }
 
 
     public List<ReportData> getReport(String course) throws IOException, InterruptedException {
-        HttpResponse<String> response = requestDataToEndpoint(course, urlAIServerPast);
+        HttpResponse<String> response = requestDataToEndpoint(course, URL_REPORT);
         var mapper = new ObjectMapper();
         return mapper.readValue(response.body(), new TypeReference<>() {});
     }

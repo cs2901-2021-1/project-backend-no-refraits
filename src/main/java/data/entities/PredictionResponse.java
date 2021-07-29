@@ -3,7 +3,6 @@ package data.entities;
 import lombok.*;
 
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class PredictionResponse {
     @NonNull @Getter @Setter
     private Integer prediction;

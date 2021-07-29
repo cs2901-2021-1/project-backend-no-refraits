@@ -1,9 +1,8 @@
 package data.entities;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
 public class ReportData {
     @NonNull @Getter @Setter String semester;
     @NonNull @Getter @Setter Integer predicted;

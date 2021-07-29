@@ -57,6 +57,7 @@ public class UsuarioService {
     public boolean isUserRegistered(Usuario user){
         return !user.getGoogleid().equals("$2a$10$X91IHQASjCLaIxYLEAeT6.jzCotLkupnWVRWHa6XQZwhdxQSKnZ/u");
     }
+
     public void registerUser(Usuario user, String password){
         user.setGoogleid(bcryptEncoder.encode(password));
         repository.save(user);

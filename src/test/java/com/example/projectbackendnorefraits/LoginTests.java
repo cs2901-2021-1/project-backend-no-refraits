@@ -1,5 +1,6 @@
 package com.example.projectbackendnorefraits;
 
+import functions.LoginFunctions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -8,23 +9,19 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import data.entities.Login;
 import org.junit.jupiter.api.*;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ApplicationTests {
+class LoginTests {
 
     @Autowired
     private MockMvc mvc;
@@ -72,8 +69,8 @@ class ApplicationTests {
     @Test
     @Order(2)
     void loginAllowedUserReturnsCode200AndToken() throws Exception {
-        final MvcResult simulateLogin = simulateLogin();
-        final String response = simulateLogin
+        final MvcResult result = LoginFunctions.simulateLogin(mvc);
+        final String response = result
                 .getResponse()
                 .getContentAsString();
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
@@ -85,7 +82,7 @@ class ApplicationTests {
     @Test
     @Order(2)
     void userIsLoggedAfterSendingLoginData() throws Exception {
-        final MvcResult result = simulateLogin();
+        final MvcResult result = LoginFunctions.simulateLogin(mvc);
         final String response = result.getResponse().getContentAsString();
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
@@ -99,7 +96,7 @@ class ApplicationTests {
     @Test
     @Order(3)
     void nonExistentUserRejectedOnLogin() throws Exception {
-        final MvcResult result = simulateLoginFail();
+        final MvcResult result = LoginFunctions.simulateLoginFail(mvc);
         final String response = result
                 .getResponse()
                 .getContentAsString();
@@ -118,42 +115,4 @@ class ApplicationTests {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
 
     }
-
-
-    public static String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    Login getLoginMockData() {
-        return new Login("esteban.villacorta@utec.edu.pe", "111014891633982592683");
-    }
-
-    Login fakeLoginMockData() {
-        return new Login("absolutely.fake@fake.edu.pe", "111014891633982592683");
-    }
-
-    MvcResult simulateLogin() throws Exception {
-        final var login = getLoginMockData();
-        return mvc.perform(MockMvcRequestBuilders.post("/token/generate-token")
-                .content(asJsonString(login))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn();
-    }
-
-    MvcResult simulateLoginFail() throws Exception {
-        final var login = fakeLoginMockData();
-        return mvc.perform(MockMvcRequestBuilders.post("/token/generate-token")
-                .content(asJsonString(login))
-                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
 }
