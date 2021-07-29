@@ -43,7 +43,7 @@ public class UsuarioService {
         return items;
     }
 
-    public boolean isUserRegistered(Usuario user){
+    public boolean isUserRegistered(Usuario user) {
         return !user.getGoogleid().equals(PW_HASH_TMP);
     }
 
