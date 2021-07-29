@@ -5,6 +5,6 @@ import lombok.*;
 @NoArgsConstructor
 public class ReportData {
     @NonNull @Getter @Setter String semester;
-    @NonNull @Getter @Setter Integer predicted;
-    @NonNull @Getter @Setter Integer enrolled;
+    @NonNull @Getter @Setter String predicted;
+    @NonNull @Getter @Setter String enrolled;
 }

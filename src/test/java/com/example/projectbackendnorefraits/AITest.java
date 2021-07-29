@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 @SpringBootTest(classes = ProjectBackendNoRefraitsApplication.class)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class AIServiceTest {
-    static final Logger logger = Logger.getLogger(AIServiceTest.class.getName());
+class AITest {
+    static final Logger logger = Logger.getLogger(AITest.class.getName());
 
     @Autowired
     MockMvc mvc;
@@ -62,7 +62,7 @@ class AIServiceTest {
         final String response = result.getResponse().getContentAsString();
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
-        mvc.perform(MockMvcRequestBuilders.get(PREDICTION_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.post(PREDICTION_ENDPOINT)
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", token)
                 .contentType("application/json")
@@ -80,7 +80,7 @@ class AIServiceTest {
         final String response = result.getResponse().getContentAsString();
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
-        mvc.perform(MockMvcRequestBuilders.get(REPORT_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.post(REPORT_ENDPOINT)
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", token)
                 .contentType("application/json")
