@@ -29,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
         String authToken = null;
         if (header == null) {
+            chain.doFilter(req, res);
             return;
         }
         authToken = header;
@@ -36,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             username = jwtTokenUtil.getUsernameFromToken(authToken);
         } catch(Exception e) {
             logger.error("Error en la autenticacion");
+            chain.doFilter(req, res);
             return;
         }
 
