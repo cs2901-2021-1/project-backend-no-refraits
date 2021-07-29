@@ -15,6 +15,8 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UsuarioService {
+    public static final String[] roles = {"Administrador de sistema", "Administrador de dirección", "Director Académico", "Usuario de Dirección"};
+    public static final String PW_HASH_TMP = "$2a$10$X91IHQASjCLaIxYLEAeT6.jzCotLkupnWVRWHa6XQZwhdxQSKnZ/u";
 
     private final UsuarioRepository repository;
     private final BCryptPasswordEncoder bcryptEncoder;
@@ -25,21 +27,8 @@ public class UsuarioService {
         this.bcryptEncoder = bcryptEncoder;
     }
 
-
-
     private String roleName(long role){
-        var retorno = "";
-        if (role == 1){
-            retorno = "Administrador de sistema";
-        }else if(role == 2) {
-            retorno = "Administrador de dirección";
-        }
-        else if(role == 3){
-            retorno = "Director Académico";
-        }else if(role == 4){
-            retorno = "Usuario de Dirección";
-        }
-        return retorno;
+        return roles[(int) role - 1];
     }
 
     public List<UsuarioDisplay> getAllUserToDisplay(String gmail){
@@ -55,7 +44,7 @@ public class UsuarioService {
     }
 
     public boolean isUserRegistered(Usuario user){
-        return !user.getGoogleid().equals("$2a$10$X91IHQASjCLaIxYLEAeT6.jzCotLkupnWVRWHa6XQZwhdxQSKnZ/u");
+        return !user.getGoogleid().equals(PW_HASH_TMP);
     }
 
     public void registerUser(Usuario user, String password){

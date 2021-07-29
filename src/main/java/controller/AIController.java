@@ -22,14 +22,14 @@ public class AIController {
         this.aiService = aiService;
     }
 
-    @GetMapping("/prediccion")
+    @PostMapping("/prediccion")
     @CrossOrigin(origins = CLIENT_URL)
     public PredictionResponse prediccion(@RequestBody PredictionRequest request) throws IOException, InterruptedException {
         return aiService.getPrediction(request.getCurso());
     }
 
 
-    @GetMapping("/report")
+    @PostMapping("/report")
     @CrossOrigin(origins = CLIENT_URL)
     public List<ReportData> report(@RequestBody PredictionRequest request) throws IOException, InterruptedException {
         return aiService.getReport(request.getCurso());
