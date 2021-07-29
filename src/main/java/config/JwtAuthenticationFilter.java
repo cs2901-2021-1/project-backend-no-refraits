@@ -28,23 +28,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = req.getHeader(HEADER_STRING);
         String username = null;
         String authToken = null;
-        if (header != null) {
-            authToken = header;
-            try {
-                username = jwtTokenUtil.getUsernameFromToken(authToken);
-            } catch (ExpiredJwtException e) {
-                logger.warn("Token expirado");
-                chain.doFilter(req, res);
-                return;
-            } catch(Exception e){
-                logger.error("Error en la autenticacion");
-                chain.doFilter(req, res);
-                return;
-            }
-        } else {
-            logger.warn("error con el token");
+        if (header == null) {
+            chain.doFilter(req, res);
+            return;
         }
-        // ENCONTRAR LA FORMA DE QUE EN VEZ DE ARROJAR CODE 500 GENERE UN  NUEVO TOKEN
+        authToken = header;
+        try {
+            username = jwtTokenUtil.getUsernameFromToken(authToken);
+        } catch(Exception e) {
+            logger.error("Error en la autenticacion");
+            chain.doFilter(req, res);
+            return;
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
