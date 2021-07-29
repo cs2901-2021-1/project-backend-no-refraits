@@ -89,7 +89,7 @@ class ApplicationTests {
         final String response = result.getResponse().getContentAsString();
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
-        mvc.perform(MockMvcRequestBuilders.get("/token/checkiflogged")
+        mvc.perform(MockMvcRequestBuilders.get("/authorization/checkiflogged")
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", token))
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
@@ -112,12 +112,10 @@ class ApplicationTests {
     @Order(4)
     void invalidTokenIsRejected() throws Exception {
         final String falseToken = "this.isa.falsetoken";
-        mvc.perform(MockMvcRequestBuilders.get("/token/checkiflogged")
+        mvc.perform(MockMvcRequestBuilders.get("/authorization/checkiflogged")
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", falseToken))
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("false"))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
 
     }
 
