@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
-//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class UsuarioController {
     static final String CLIENT_URL = "*";
 
@@ -34,7 +34,6 @@ public class UsuarioController {
 
     //POST
     @PostMapping("/create/{rol}/{direccion}")
-    @CrossOrigin(origins = CLIENT_URL)
     public Usuario newUsuario(@PathVariable String rol, @PathVariable String direccion, @RequestBody Usuario usuario, @RequestHeader("Authorization") String token) {
         var itexists = usuarioService.existsByEmail(usuario.getEmail());
         if (itexists) return null;
@@ -59,7 +58,6 @@ public class UsuarioController {
 
     //GET ALL
     @GetMapping("/getall")
-    @CrossOrigin(origins = CLIENT_URL)
     public List<UsuarioDisplay> readAll(@RequestHeader("Authorization") String token) {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findUsuarioByEmailAndNombreNotNull(username);
@@ -72,7 +70,6 @@ public class UsuarioController {
 
     //GET by ID
     @GetMapping("/{id}")
-    @CrossOrigin(origins = CLIENT_URL)
     public Usuario one(@PathVariable Long id) {
         return usuarioService.findOne(id);
     }
@@ -80,7 +77,6 @@ public class UsuarioController {
 
     //DELETE by ID
     @DeleteMapping("/delete/{id}")
-    @CrossOrigin(origins = CLIENT_URL)
     public void deleteUser(@PathVariable Long id) {
         usuarioService.deleteById(id);
     }

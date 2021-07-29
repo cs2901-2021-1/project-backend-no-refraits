@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/ai")
 public class AIController {
     static final String CLIENT_URL = "*";
@@ -23,14 +24,12 @@ public class AIController {
     }
 
     @PostMapping("/prediccion")
-    @CrossOrigin(origins = CLIENT_URL)
     public PredictionResponse prediccion(@RequestBody PredictionRequest request) throws IOException, InterruptedException {
         return aiService.getPrediction(request.getCurso());
     }
 
 
     @PostMapping("/report")
-    @CrossOrigin(origins = CLIENT_URL)
     public List<ReportData> report(@RequestBody PredictionRequest request) throws IOException, InterruptedException {
         return aiService.getReport(request.getCurso());
     }
