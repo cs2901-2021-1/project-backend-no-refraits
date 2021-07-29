@@ -4,6 +4,7 @@ import data.entities.Usuario;
 import data.entities.UsuarioDisplay;
 import data.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final BCryptPasswordEncoder bcryptEncoder;
 
     @Autowired
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, BCryptPasswordEncoder bcryptEncoder) {
         this.repository = repository;
+        this.bcryptEncoder = bcryptEncoder;
     }
 
 
@@ -49,6 +52,15 @@ public class UsuarioService {
             }
         }
         return items;
+    }
+
+    public boolean isUserRegistered(Usuario user){
+        return !user.getGoogleid().equals("$2a$10$X91IHQASjCLaIxYLEAeT6.jzCotLkupnWVRWHa6XQZwhdxQSKnZ/u");
+    }
+    public void registerUser(Usuario user, String password){
+        System.out.println("Usuario no registro... ahora se esta registrando");
+        user.setGoogleid(bcryptEncoder.encode(password));
+        repository.save(user);
     }
 
     public List<UsuarioDisplay> getUsersUnderDirection(String direccion, String gmail){
