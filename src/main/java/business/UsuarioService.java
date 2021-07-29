@@ -55,7 +55,7 @@ public class UsuarioService {
     }
 
     public boolean isUserRegistered(Usuario user){
-        return !user.getGoogleid().equals("$2a$10$X91IHQASjCLaIxYLEAeT6.jzCotLkupnWVRWHa6XQZwhdxQSKnZ/u");
+        return !user.getGoogleid().equals("$2a$10$JjA2UATuo3IQwsBmDTfxzuvDtPcl/8ezTaEPJLuAjtALGXs1DWHHu");
     }
     public void registerUser(Usuario user, String password){
         System.out.println("Usuario no registro... ahora se esta registrando");
