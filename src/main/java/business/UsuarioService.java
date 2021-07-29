@@ -93,7 +93,7 @@ public class UsuarioService {
         return usuario.getRol().getId()==2;
     }
 
-    public Usuario findOne(long id){
+    public Usuario findOne(long id) {
         return repository.findById(id).get();
     }
 

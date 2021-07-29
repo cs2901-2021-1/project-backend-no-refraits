@@ -38,28 +38,4 @@ public class AuthenticationService implements UserDetailsService{
         user.setGoogleid(bcryptEncoder.encode(user.getGoogleid()));
         return usuarioRepository.save(user);
     }
-    /*
-    private final UsuarioRepository usuarioRepository;
-    private final BCryptPasswordEncoder bcryptEncoder;
-
-    @Autowired
-    public AuthenticationService(UsuarioRepository usuarioRepository, BCryptPasswordEncoder bcryptEncoder) {
-        this.usuarioRepository = usuarioRepository;
-        this.bcryptEncoder = bcryptEncoder;
-    }
-
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario user = usuarioRepository.findUsuarioByEmail(username);
-        if(user == null){
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getGoogleid(), getAuthority(user));
-    }
-    private Set<SimpleGrantedAuthority> getAuthority(Usuario user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRol().getName()));
-        return authorities;
-    }
-
-    */
 }
