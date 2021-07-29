@@ -60,7 +60,7 @@ public class UtecService {
     public static final String QUERYCURSOS = "" +
             "SELECT DISTINCT\n" +
             "            CURSO_ACT.DESCRIPCIONLARGA                                  AS \"nombre_curso\",\n" +
-            "            CURSO_ACT.CODACTIVIDAD                                      AS \"cod_curso\"\n" +
+            "            CURSO_ACT.IDACTIVIDAD                                      AS \"cod_curso\"\n" +
             "\n" +
             "FROM        PROGRAMACION.PRO_CURSO_SECCION CURSO_SECCION\n" +
             "\n" +
