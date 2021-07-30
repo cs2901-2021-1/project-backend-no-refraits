@@ -34,13 +34,7 @@ public class UtecController {
     // temporary function
     @GetMapping(value="/directions")
     public List<Map<String, String>> getDirections() throws SQLException {
-        try {
-            return utecService.getAllDirections();
-        } catch (Exception e) {
-            Map<String, String> map = new HashMap<>();
-            map.put("error", e.toString());
-            return new ArrayList<>(Collections.singletonList(map));
-        }
+        return utecService.getAllDirections();
     }
 
     @GetMapping(value = "/cursos/{direccionId}")
