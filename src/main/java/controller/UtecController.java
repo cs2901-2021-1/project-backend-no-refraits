@@ -6,6 +6,8 @@ import config.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.http.HTTPException;
+import java.net.http.HttpResponse;
 import java.sql.*;
 import java.util.*;
 
@@ -32,7 +34,13 @@ public class UtecController {
     // temporary function
     @GetMapping(value="/directions")
     public List<Map<String, String>> getDirections() throws SQLException {
-        return utecService.getAllDirections();
+        try {
+            return utecService.getAllDirections();
+        } catch (Exception e) {
+            Map map = new HashMap<>();
+            map.put("error", e.toString());
+            return new ArrayList<>(Collections.singletonList(map));
+        }
     }
 
     @GetMapping(value = "/cursos/{direccionId}")
