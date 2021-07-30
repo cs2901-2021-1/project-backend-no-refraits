@@ -6,6 +6,7 @@ import config.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
@@ -29,17 +30,16 @@ public class UtecController {
         this.usuarioService = usuarioService;
     }
 
-    // temporary function
     @GetMapping(value="/directions")
-    public List<Map<String, String>> getDirections() throws SQLException {
+    public List<Map<String, String>> getDirections() throws IOException, InterruptedException {
         return utecService.getAllDirections();
     }
 
     @GetMapping(value = "/cursos/{direccionId}")
-    public List<Map<String, String>> getCourses(@PathVariable String direccionId, @RequestHeader("Authorization") String token) throws SQLException{
+    public List<Map<String, String>> getCourses(@PathVariable String direccionId, @RequestHeader("Authorization") String token) throws SQLException, IOException, InterruptedException {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findUsuarioByEmailAndNombreNotNull(username);
-        if(user.getRol().getId() == 3 || user.getRol().getId() == 4){
+        if(user.getRol().getId() == 2 || user.getRol().getId() == 4){
             return utecService.getCourseFromDireccion(user.getDireccion());
         }
         return utecService.getCourseFromDireccion(direccionId);

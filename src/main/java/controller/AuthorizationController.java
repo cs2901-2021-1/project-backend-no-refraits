@@ -68,7 +68,7 @@ public class AuthorizationController {
     public boolean checkifuserbelongstodirec(@RequestHeader("Authorization") String token ){
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findOneByEmail(username);
-        return (user.getRol().getId() == 3 || user.getRol().getId() == 4);
+        return (user.getRol().getId() == 2 || user.getRol().getId() == 4);
     }
 
 

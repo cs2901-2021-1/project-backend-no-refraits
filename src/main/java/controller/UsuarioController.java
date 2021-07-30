@@ -68,13 +68,6 @@ public class UsuarioController {
 
     }
 
-    //GET by ID
-    @GetMapping("/{id}")
-    public Usuario one(@PathVariable Long id) {
-        return usuarioService.findOne(id);
-    }
-
-
     //DELETE by ID
     @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Long id) {
