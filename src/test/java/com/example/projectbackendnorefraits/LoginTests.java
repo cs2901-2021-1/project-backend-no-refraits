@@ -17,6 +17,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -115,5 +118,17 @@ class LoginTests {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
 
     }
+
+    @Test
+    @Order(5)
+    void handle50LoginsAtTheTime() throws Exception {
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < 50; ++i) {
+            threads.add(new Thread(() -> Assertions.assertDoesNotThrow(this::userIsLoggedAfterSendingLoginData)));
+        }
+        for (var thread : threads) thread.start();
+        for (var thread : threads) thread.join();
+    }
+
 
 }

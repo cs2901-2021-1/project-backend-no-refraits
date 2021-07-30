@@ -5,10 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import controller.UtecController;
 import functions.LoginFunctions;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +78,15 @@ class UtecControllerTest {
 
         Assertions.assertNotNull(courses);
         Assertions.assertFalse(courses.isEmpty());
+    }
 
-
+    @Test
+    void handle50RequestsAtTheTime() throws Exception {
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < 50; ++i) {
+            threads.add(new Thread(() -> Assertions.assertDoesNotThrow(this::getCourses)));
+        }
+        for (var thread : threads) thread.start();
+        for (var thread : threads) thread.join();
     }
 }
