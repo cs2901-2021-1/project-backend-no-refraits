@@ -16,6 +16,11 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>
+        <sonar.exclusions>
+            /src/main/java/com/example/projectbackendnorefraits/*,
+            /src/main/java/config/JwtAuthenticationEntryPoint.java,
+            /src/main/java/entities/*,
+        </sonar.exclusions>
 
     </properties>
     <dependencies>
