@@ -26,19 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class UtecControllerTest {
     @Autowired
-    UtecService service;
-
-    @Autowired
     MockMvc mvc;
 
-    @Test
-    void setupIsCorrect () {
-        Assertions.assertNotNull(UtecService.user);
-        Assertions.assertNotNull(UtecService.password);
-        Assertions.assertNotNull(UtecService.url);
-
-        Assertions.assertDoesNotThrow(() -> service.getConnection());
-    }
 
     @Test
     void getDirections() throws Exception {
