@@ -37,7 +37,7 @@ public class AuthenticationController {
             return new Response<>(404, "No existe este usuario", null);
         }
         if(!usuarioService.isUserRegistered(user)){
-            usuarioService.registerUser(user, loginUser.getPassword());
+            usuarioService.registerUser(user, loginUser.getPassword(), loginUser.getNombre());
         }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));

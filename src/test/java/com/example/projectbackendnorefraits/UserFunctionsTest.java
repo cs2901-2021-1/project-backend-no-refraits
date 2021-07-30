@@ -36,28 +36,6 @@ class UserFunctionsTest {
         Assertions.assertTrue(retval.stream().noneMatch(x -> x.getEmail().equals(TEST_GMAIL)));
     }
 
-    @Test
-    void isUserRegistered() {
-        final Usuario tempUser = new Usuario();
-        tempUser.setGoogleid(UsuarioService.PW_HASH_TMP);
-        Assertions.assertFalse(service.isUserRegistered(tempUser));
-
-        tempUser.setGoogleid(TEST_GID);
-        Assertions.assertTrue(service.isUserRegistered(tempUser));
-    }
-
-    @Test
-    void registerUser() {
-        final Usuario user = new Usuario();
-        user.setEmail(TEST_GMAIL);
-        user.setGoogleid(UsuarioService.PW_HASH_TMP);
-
-        Mockito.when(repository.findUsuarioByEmail(TEST_GMAIL)).thenReturn(user);
-
-        service.registerUser(user, TEST_GID);
-        Assertions.assertNotNull(repository.findUsuarioByEmail(TEST_GMAIL));
-        Assertions.assertTrue(service.isUserRegistered(user));
-    }
 
     @Test
     void getUsersUnderDirection() {

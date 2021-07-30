@@ -41,7 +41,6 @@ public class AIService {
     public List<ReportData> getReport(String course) throws IOException, InterruptedException {
         HttpResponse<String> response = requestDataToEndpoint(course, URL_REPORT);
         var mapper = new ObjectMapper();
-        System.out.println(response.body());
         return mapper.readValue(response.body(), new TypeReference<>() {});
     }
 }

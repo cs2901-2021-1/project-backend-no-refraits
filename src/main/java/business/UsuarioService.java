@@ -16,7 +16,6 @@ import java.util.Optional;
 @Transactional
 public class UsuarioService {
     public static final String[] roles = {"Administrador de sistema", "Administrador de dirección", "Director Académico", "Usuario de Dirección"};
-    public static final String PW_HASH_TMP = "$2a$10$X91IHQASjCLaIxYLEAeT6.jzCotLkupnWVRWHa6XQZwhdxQSKnZ/u";
 
     private final UsuarioRepository repository;
     private final BCryptPasswordEncoder bcryptEncoder;
@@ -44,10 +43,11 @@ public class UsuarioService {
     }
 
     public boolean isUserRegistered(Usuario user) {
-        return !user.getGoogleid().equals(PW_HASH_TMP);
+        return !user.getNombre().equals("");
     }
 
-    public void registerUser(Usuario user, String password){
+    public void registerUser(Usuario user, String password, String nombre){
+        user.setNombre(nombre);
         user.setGoogleid(bcryptEncoder.encode(password));
         repository.save(user);
     }
