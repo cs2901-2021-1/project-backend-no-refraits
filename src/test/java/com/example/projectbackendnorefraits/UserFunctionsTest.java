@@ -1,5 +1,6 @@
-package business;
+package com.example.projectbackendnorefraits;
 
+import business.UsuarioService;
 import com.example.projectbackendnorefraits.ProjectBackendNoRefraitsApplication;
 import data.entities.Usuario;
 import data.entities.UsuarioDisplay;
