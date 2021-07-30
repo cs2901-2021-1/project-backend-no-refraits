@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,5 +89,13 @@ class UtecControllerTest {
         }
         for (var thread : threads) thread.start();
         for (var thread : threads) thread.join();
+    }
+
+    @Test
+    @Timeout(value = 10)
+    void testTimeout () throws  Exception {
+        getCourses();
+        getDirections();
+        Assertions.assertTrue(true);
     }
 }

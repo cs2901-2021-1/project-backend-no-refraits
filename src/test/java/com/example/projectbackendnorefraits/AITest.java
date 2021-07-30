@@ -89,4 +89,12 @@ class AITest {
         Assertions.assertTrue(true);
     }
 
+    @Test
+    @Timeout(value = 10)
+    void testTimeout () throws  Exception {
+        predictionWorksCorrectly();
+        reportWorksCorrectly();
+        Assertions.assertTrue(true);
+    }
+
 }
