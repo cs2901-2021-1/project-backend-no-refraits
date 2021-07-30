@@ -2,6 +2,7 @@ package com.example.projectbackendnorefraits;
 
 import business.UtecService;
 import com.jayway.jsonpath.JsonPath;
+import controller.UtecController;
 import functions.LoginFunctions;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +19,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.Assert;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -28,21 +32,32 @@ class UtecControllerTest {
     @Autowired
     MockMvc mvc;
 
+    @Autowired
+    UtecController controller;
+
 
     @Test
     void getDirections() throws Exception {
+        List<Map<String, String>> testalldirections = controller.getDirections();
+
         final MvcResult result = LoginFunctions.simulateLogin(mvc);
         final String response = result.getResponse().getContentAsString();
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
 
-         mvc.perform(MockMvcRequestBuilders.get("/testc/directions")
+        MvcResult directionsResult = mvc.perform(MockMvcRequestBuilders.get("/testc/directions")
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", token))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andDo(MockMvcResultHandlers.print());
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
 
-         Assertions.assertTrue(true);
+        var strResult = directionsResult.getResponse().getContentAsString();
+        final List<Map<String, String>> allDirections = JsonPath.parse(strResult).json();
+
+        Assertions.assertNotNull(allDirections);
+        Assertions.assertFalse(allDirections.isEmpty());
+        Assertions.assertEquals(testalldirections, allDirections);
     }
 
 
@@ -53,12 +68,19 @@ class UtecControllerTest {
         final String token = JsonPath.parse(response).read("$[\"result\"][\"token\"]");
 
 
-        mvc.perform(MockMvcRequestBuilders.get("/testc/directions")
+        MvcResult courseResult = mvc.perform(MockMvcRequestBuilders.get("/testc/directions")
                 .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
                 .header("Authorization", token))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andDo(MockMvcResultHandlers.print());
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
 
-        Assertions.assertTrue(true);
+        var strResult = courseResult.getResponse().getContentAsString();
+        final List<Map<String, String>> courses = JsonPath.parse(strResult).json();
+
+        Assertions.assertNotNull(courses);
+        Assertions.assertFalse(courses.isEmpty());
+
+
     }
 }
