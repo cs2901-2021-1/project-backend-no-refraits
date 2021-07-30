@@ -1,6 +1,7 @@
 package business;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,22 +104,25 @@ public class UtecService {
             "AND         RANGO_PERIODO.FECHAINICIO >= TO_TIMESTAMP('2018-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')\n" +
             "AND         AREA_FUNCIONAL.CODAREAFUNCIONAL= ? \n";
 
-    public static final String user = "desarrollo";
-    public static final String password = "qad3vLE7Uk0110xor";
-    public static final String url = "jdbc:oracle:thin:@coreqa4.cl2cyff2cklb.us-west-2.rds.amazonaws.com:1521:coreqa4";
-
+    public final String user;
+    public final String password;
+    public final String url;
 
     @Autowired
-    UtecService() {
-        // Nothing to do here
+    UtecService(Environment env) {
+        this.user = env.getProperty("UTEC_DB_USERNAME");
+        this.password = env.getProperty("UTEC_DB_PASSWORD");
+        this.url = env.getProperty("UTEC_DB_URL");
+        assert this.user != null && this.password != null && this.url != null;
     }
 
     public Connection getConnection() throws SQLException {
+        assert this.user != null && this.password != null && this.url != null;
         var connectionProps = new Properties();
-        connectionProps.put("user", user);
-        connectionProps.put("password", password);
+        connectionProps.put("user", this.user);
+        connectionProps.put("password", this.password);
 
-        return DriverManager.getConnection(url, connectionProps);
+        return DriverManager.getConnection(this.url, connectionProps);
     }
 
     public List<Map<String, String>> getAllDirections() throws SQLException {

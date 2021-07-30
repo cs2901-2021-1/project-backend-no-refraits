@@ -6,8 +6,6 @@ import config.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.http.HTTPException;
-import java.net.http.HttpResponse;
 import java.sql.*;
 import java.util.*;
 
