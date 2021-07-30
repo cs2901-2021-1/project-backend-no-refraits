@@ -37,7 +37,7 @@ public class UtecController {
         try {
             return utecService.getAllDirections();
         } catch (Exception e) {
-            Map map = new HashMap<>();
+            Map<String, String> map = new HashMap<>();
             map.put("error", e.toString());
             return new ArrayList<>(Collections.singletonList(map));
         }
