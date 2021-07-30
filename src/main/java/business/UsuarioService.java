@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UsuarioService {
-    public static final String[] roles = {"Administrador de sistema", "Administrador de dirección", "Director Académico", "Usuario de Dirección"};
+    protected static final String[] roles = {"Administrador de sistema", "Administrador de dirección", "Director Académico", "Usuario de Dirección"};
 
     private final UsuarioRepository repository;
     private final BCryptPasswordEncoder bcryptEncoder;

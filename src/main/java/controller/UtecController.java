@@ -36,7 +36,7 @@ public class UtecController {
     }
 
     @GetMapping(value = "/cursos/{direccionId}")
-    public List<Map<String, String>> getCourses(@PathVariable String direccionId, @RequestHeader("Authorization") String token) throws SQLException, IOException, InterruptedException {
+    public List<Map<String, String>> getCourses(@PathVariable String direccionId, @RequestHeader("Authorization") String token) throws IOException, InterruptedException {
         var username = jwtTokenUtil.getUsernameFromToken(token);
         var user = usuarioService.findUsuarioByEmailAndNombreNotNull(username);
         if(user.getRol().getId() == 2 || user.getRol().getId() == 4){
